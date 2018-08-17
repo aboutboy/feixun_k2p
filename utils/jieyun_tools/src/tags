@@ -1,0 +1,461 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BAK_FILE_SUFFIX	ngx_update/wifi_update.h	42;"	d
+BAK_KER_UP_SUC	ngx_update/wifi_update.h	/^	BAK_KER_UP_SUC,$/;"	e	enum:ker_up_sta
+BAK_KER_WILL_RESTART	ngx_update/wifi_update.h	/^	BAK_KER_WILL_RESTART,$/;"	e	enum:ker_up_sta
+CC	idmapping/Makefile	/^CC = gcc$/;"	m
+CC	jy_black_list/Makefile	/^CC:=gcc$/;"	m
+CCFLAGS	idmapping/Makefile	/^CCFLAGS = -g -Wall$/;"	m
+CJSON_EXPORT_SYMBOLS	public_fun/cJSON.h	108;"	d
+CJSON_NESTING_LIMIT	public_fun/cJSON.h	129;"	d
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_Compare(const cJSON * const a, const cJSON * const b, const cJSON_bool case_sensitive)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_HasObjectItem(const cJSON *object, const char *string)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsArray(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsBool(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsFalse(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsInvalid(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsNull(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsNumber(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsObject(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsRaw(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsString(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsTrue(const cJSON * const item)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_PrintPreallocated(cJSON *item, char *buf, const int len, const cJSON_bool fmt)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemViaPointer(cJSON * const parent, cJSON * const item, cJSON * replacement)$/;"	f
+CJSON_PUBLIC	public_fun/cJSON.h	112;"	d
+CJSON_PUBLIC	public_fun/cJSON.h	114;"	d
+CJSON_PUBLIC	public_fun/cJSON.h	116;"	d
+CJSON_PUBLIC	public_fun/cJSON.h	120;"	d
+CJSON_PUBLIC	public_fun/cJSON.h	122;"	d
+CJSON_VERSION_MAJOR	public_fun/cJSON.h	32;"	d
+CJSON_VERSION_MINOR	public_fun/cJSON.h	33;"	d
+CJSON_VERSION_PATCH	public_fun/cJSON.h	34;"	d
+CMD_GET_FW_VER	get_js/get_js.c	15;"	d	file:
+CMD_GET_HW_VER	get_js/get_js.c	14;"	d	file:
+CMD_GET_WANMAC	get_js/get_js.c	13;"	d	file:
+DEBUG	public_fun/log_tools.h	19;"	d
+EXE	get_js/Makefile	/^EXE:=get_js$/;"	m
+EXE	idmapping/Makefile	/^EXE = idmapping$/;"	m
+EXE	jy_black_list/Makefile	/^EXE:=jy_black_list$/;"	m
+F	get_js/md5.h	12;"	d
+FF	get_js/md5.h	18;"	d
+FILE_NAME_MAX_LEN	ngx_update/wifi_update.h	30;"	d
+G	get_js/md5.h	13;"	d
+GET_IOS_ADDR	idmapping/idmapping.h	29;"	d
+GG	get_js/md5.h	24;"	d
+H	get_js/md5.h	14;"	d
+HH	get_js/md5.h	30;"	d
+HTTP_ADDR_FMT	get_js/get_js.c	18;"	d	file:
+HTTP_DOMAIN	get_js/get_js.c	12;"	d	file:
+I	get_js/md5.h	15;"	d
+II	get_js/md5.h	36;"	d
+INCLUDE	idmapping/Makefile	/^INCLUDE = -I. -I..\/public_fun$/;"	m
+INIT_LIST_HEAD	public_fun/list.h	33;"	d
+IOS_REALTIME_HOST	idmapping/idmapping.h	32;"	d
+IOS_TIMEOUT	idmapping/idmapping.h	33;"	d
+JS_FILE	get_js/get_js.c	9;"	d	file:
+JS_FILE_TMP	get_js/get_js.c	10;"	d	file:
+JY_BLACK_LIST_CFG_FILE	jy_black_list/jy_black_list.c	9;"	d	file:
+JY_DEBUG	jy_black_list/jy_black_list.c	13;"	d	file:
+JY_GW_INTERFACE	jy_black_list/jy_black_list.c	12;"	d	file:
+JY_IPT_BLACK_LIST_CMD_FMT	jy_black_list/jy_black_list.c	11;"	d	file:
+JY_LINE_MAX_LEN	jy_black_list/jy_black_list.c	10;"	d	file:
+LIBS	idmapping/Makefile	/^LIBS = -lcurl -lpthread -L.$/;"	m
+LIST_H	public_fun/list.h	2;"	d
+LIST_HEAD	public_fun/list.h	30;"	d
+LIST_HEAD_INIT	public_fun/list.h	28;"	d
+LIST_POISON1	public_fun/list.h	121;"	d
+LIST_POISON2	public_fun/list.h	122;"	d
+LOGIN_ACK	ngx_update/wifi_update.h	/^	LOGIN_ACK = 0xf0000001,$/;"	e	enum:__anon7
+LOGIN_REQ	ngx_update/wifi_update.h	/^	LOGIN_REQ = 0x20000001,$/;"	e	enum:__anon6
+LOG_FILE	public_fun/log_tools.h	16;"	d
+MAX_LOG_SIZE	public_fun/log_tools.h	15;"	d
+MAX_TRANS_LEN	ngx_update/wifi_update.h	35;"	d
+MAX_URL_VAL	idmapping/idmapping.h	24;"	d
+MD5Decode	get_js/md5.c	/^void MD5Decode(unsigned int *output,unsigned char *input,unsigned int len)  $/;"	f
+MD5Encode	get_js/md5.c	/^void MD5Encode(unsigned char *output,unsigned int *input,unsigned int len)  $/;"	f
+MD5Final	get_js/md5.c	/^void MD5Final(MD5_CTX *context,unsigned char digest[16])  $/;"	f
+MD5Init	get_js/md5.c	/^void MD5Init(MD5_CTX *context)  $/;"	f
+MD5Transform	get_js/md5.c	/^void MD5Transform(unsigned int state[4],unsigned char block[64])  $/;"	f
+MD5Update	get_js/md5.c	/^void MD5Update(MD5_CTX *context,unsigned char *input,unsigned int inputlen)  $/;"	f
+MD5_CTX	get_js/md5.h	/^}MD5_CTX;  $/;"	t	typeref:struct:__anon15
+MD5_H_	get_js/md5.h	2;"	d
+MONITOR_NETIF	idmapping/idmapping.h	31;"	d
+MV_RELOAD_NGX_FMT	get_js/get_js.c	16;"	d	file:
+MemoryStruct	idmapping/idmapping.c	/^struct MemoryStruct {$/;"	s	file:
+NEW_KER_UP_SUC	ngx_update/wifi_update.h	/^	NEW_KER_UP_SUC = 0,$/;"	e	enum:ker_up_sta
+NEW_VER_FILE	ngx_update/wifi_update.h	27;"	d
+NGX_FILE	get_js/get_js.c	11;"	d	file:
+OBJS	get_js/Makefile	/^OBJS = get_js.o md5.o$/;"	m
+OBJS	idmapping/Makefile	/^OBJS = $(SRCS:.c = .o)$/;"	m
+OBJS	jy_black_list/Makefile	/^OBJS = jy_black_list.o$/;"	m
+ORG_KER_UP_SUC	ngx_update/wifi_update.h	/^	ORG_KER_UP_SUC$/;"	e	enum:ker_up_sta
+ORG_KER_WILL_RESTART	ngx_update/wifi_update.h	/^	ORG_KER_WILL_RESTART,$/;"	e	enum:ker_up_sta
+PADDING	get_js/md5.c	/^unsigned char PADDING[]={0x80,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,  $/;"	v
+PASSWD	ngx_update/wifi_update.h	29;"	d
+PATH_MAX_LEN	ngx_update/wifi_update.h	31;"	d
+PING_CMD_FMT	get_js/get_js.c	17;"	d	file:
+POST_ADDR	idmapping/idmapping.h	27;"	d
+POST_FIELDS	idmapping/idmapping.h	30;"	d
+POST_IOS_ADDR	idmapping/idmapping.h	28;"	d
+PROPERTY_VALUE_MAX	ngx_update/wifi_update.h	34;"	d
+PROPERTY_VALUE_MAX	public_fun/log_tools.h	14;"	d
+PROTOL_VER	ngx_update/wifi_update.h	33;"	d
+QM_MAX_LOG_SIZE	ngx_update/wifi_update.h	37;"	d
+ROTATE_LEFT	get_js/md5.h	16;"	d
+RUNNING_KER_RESTART	ngx_update/wifi_update.h	/^	RUNNING_KER_RESTART,$/;"	e	enum:ker_up_sta
+SEARCH_DNS_STR	jy_black_list/jy_black_list.c	107;"	d	file:
+SERV_DOMAIN	ngx_update/wifi_update.h	25;"	d
+SERV_IP	idmapping/idmapping.h	26;"	d
+SERV_PORT	ngx_update/wifi_update.h	26;"	d
+SRCS	idmapping/Makefile	/^SRCS = $(wildcard *.c ..\/public_fun\/*.c)$/;"	m
+TARGZ_FILE_SUFFIX	ngx_update/wifi_update.h	43;"	d
+TMP_FILE_SUFFIX	ngx_update/wifi_update.h	41;"	d
+UDP_PORT	idmapping/idmapping.h	25;"	d
+UPDATE_SHELL_NAME	ngx_update/wifi_update.h	40;"	d
+USRNAME	ngx_update/wifi_update.h	28;"	d
+USR_PWD_MAX_LEN	ngx_update/wifi_update.h	32;"	d
+VER_BUFFER_LEN	ngx_update/wifi_update.h	36;"	d
+VER_DL_ACK	ngx_update/wifi_update.h	/^	VER_DL_ACK,$/;"	e	enum:__anon7
+VER_DL_REQ	ngx_update/wifi_update.h	/^	VER_DL_REQ $/;"	e	enum:__anon6
+VER_UPDATE_ACK	ngx_update/wifi_update.h	/^	VER_UPDATE_ACK,$/;"	e	enum:__anon7
+VER_UPDATE_REQ	ngx_update/wifi_update.h	/^	VER_UPDATE_REQ,$/;"	e	enum:__anon6
+WIFI_DOWNLOAD_SYS_PATH	ngx_update/wifi_update.h	39;"	d
+WIFI_UPDATE_LOG_FILE	ngx_update/wifi_update.h	38;"	d
+WILL_RUNNING_KER_UP	ngx_update/wifi_update.h	/^	WILL_RUNNING_KER_UP,$/;"	e	enum:ker_up_sta
+WriteMemoryCallback	idmapping/idmapping.c	/^WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)$/;"	f	file:
+_CRT_SECURE_NO_DEPRECATE	public_fun/cJSON.c	28;"	d	file:
+_GNU_SOURCE	idmapping/idmapping.h	1;"	d
+_GNU_SOURCE	public_fun/log_tools.h	1;"	d
+__WINDOWS__	public_fun/cJSON.h	84;"	d
+__list_add	public_fun/list.h	/^static inline void __list_add(struct list_head *_new,$/;"	f
+__list_del	public_fun/list.h	/^static inline void __list_del(struct list_head *prev, struct list_head *next)$/;"	f
+_qm_string_t	ngx_update/wifi_update.h	/^typedef struct _qm_string_t {$/;"	s
+ack_pro_num	ngx_update/wifi_update.h	/^}ack_pro_num;$/;"	v	typeref:enum:__anon7
+ack_t	ngx_update/wifi_update.h	/^}ack_t;$/;"	t	typeref:struct:__anon4
+add_item_to_array	public_fun/cJSON.c	/^static cJSON_bool add_item_to_array(cJSON *array, cJSON *item)$/;"	f	file:
+add_item_to_object	public_fun/cJSON.c	/^static cJSON_bool add_item_to_object(cJSON * const object, const char * const string, cJSON * const item, const internal_hooks * const hooks, const cJSON_bool constant_key)$/;"	f	file:
+allocate	public_fun/cJSON.c	/^    void *(*allocate)(size_t size);$/;"	m	struct:internal_hooks	file:
+analysis_url_req	idmapping/idmapping.c	/^int analysis_url_req(char *req, uri_host_ua_t *urihost, list_ctl_head_t *ios_ctl)$/;"	f
+array	public_fun/cJSON.h	/^CJSON_PUBLIC(int) cJSON_GetArraySize(const cJSON *array);$/;"	v
+binip	idmapping/idmapping.h	/^	uint32_t  binip;$/;"	m	struct:__anon11
+binip	idmapping/idmapping.h	/^	uint32_t binip;$/;"	m	struct:__anon12
+boolean	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON *) cJSON_CreateBool(cJSON_bool boolean);$/;"	v
+buffer	get_js/md5.h	/^    unsigned char buffer[64];     $/;"	m	struct:__anon15
+buffer	public_fun/cJSON.c	/^    unsigned char *buffer;$/;"	m	struct:__anon10	file:
+buffer_at_offset	public_fun/cJSON.c	263;"	d	file:
+buffer_skip_whitespace	public_fun/cJSON.c	/^static parse_buffer *buffer_skip_whitespace(parse_buffer * const buffer)$/;"	f	file:
+c	public_fun/cJSON.h	/^CJSON_PUBLIC(void) cJSON_Delete(cJSON *c);$/;"	v
+cJSON	public_fun/cJSON.h	/^typedef struct cJSON$/;"	s
+cJSON	public_fun/cJSON.h	/^} cJSON;$/;"	t	typeref:struct:cJSON
+cJSON_AddArrayToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddArrayToObject(cJSON * const object, const char * const name)$/;"	f
+cJSON_AddBoolToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddBoolToObject(cJSON * const object, const char * const name, const cJSON_bool boolean)$/;"	f
+cJSON_AddFalseToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddFalseToObject(cJSON * const object, const char * const name)$/;"	f
+cJSON_AddItemReferenceToArray	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item)$/;"	f
+cJSON_AddItemReferenceToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_AddItemReferenceToObject(cJSON *object, const char *string, cJSON *item)$/;"	f
+cJSON_AddItemToArray	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_AddItemToArray(cJSON *array, cJSON *item)$/;"	f
+cJSON_AddItemToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_AddItemToObject(cJSON *object, const char *string, cJSON *item)$/;"	f
+cJSON_AddItemToObjectCS	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_AddItemToObjectCS(cJSON *object, const char *string, cJSON *item)$/;"	f
+cJSON_AddNullToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddNullToObject(cJSON * const object, const char * const name)$/;"	f
+cJSON_AddNumberToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddNumberToObject(cJSON * const object, const char * const name, const double number)$/;"	f
+cJSON_AddObjectToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddObjectToObject(cJSON * const object, const char * const name)$/;"	f
+cJSON_AddRawToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddRawToObject(cJSON * const object, const char * const name, const char * const raw)$/;"	f
+cJSON_AddStringToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddStringToObject(cJSON * const object, const char * const name, const char * const string)$/;"	f
+cJSON_AddTrueToObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON*) cJSON_AddTrueToObject(cJSON * const object, const char * const name)$/;"	f
+cJSON_Array	public_fun/cJSON.h	45;"	d
+cJSON_ArrayForEach	public_fun/cJSON.h	267;"	d
+cJSON_CreateArray	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateArray(void)$/;"	f
+cJSON_CreateArrayReference	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateArrayReference(const cJSON *child) {$/;"	f
+cJSON_CreateBool	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateBool(cJSON_bool b)$/;"	f
+cJSON_CreateDoubleArray	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateDoubleArray(const double *numbers, int count)$/;"	f
+cJSON_CreateFalse	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateFalse(void)$/;"	f
+cJSON_CreateFloatArray	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateFloatArray(const float *numbers, int count)$/;"	f
+cJSON_CreateIntArray	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateIntArray(const int *numbers, int count)$/;"	f
+cJSON_CreateNull	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateNull(void)$/;"	f
+cJSON_CreateNumber	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateNumber(double num)$/;"	f
+cJSON_CreateObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateObject(void)$/;"	f
+cJSON_CreateObjectReference	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateObjectReference(const cJSON *child)$/;"	f
+cJSON_CreateRaw	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateRaw(const char *raw)$/;"	f
+cJSON_CreateString	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateString(const char *string)$/;"	f
+cJSON_CreateStringArray	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateStringArray(const char **strings, int count)$/;"	f
+cJSON_CreateStringReference	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateStringReference(const char *string)$/;"	f
+cJSON_CreateTrue	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_CreateTrue(void)$/;"	f
+cJSON_Delete	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_Delete(cJSON *item)$/;"	f
+cJSON_DeleteItemFromArray	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_DeleteItemFromArray(cJSON *array, int which)$/;"	f
+cJSON_DeleteItemFromObject	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_DeleteItemFromObject(cJSON *object, const char *string)$/;"	f
+cJSON_DeleteItemFromObjectCaseSensitive	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_DeleteItemFromObjectCaseSensitive(cJSON *object, const char *string)$/;"	f
+cJSON_DetachItemFromArray	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromArray(cJSON *array, int which)$/;"	f
+cJSON_DetachItemFromObject	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObject(cJSON *object, const char *string)$/;"	f
+cJSON_DetachItemFromObjectCaseSensitive	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObjectCaseSensitive(cJSON *object, const char *string)$/;"	f
+cJSON_DetachItemViaPointer	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_DetachItemViaPointer(cJSON *parent, cJSON * const item)$/;"	f
+cJSON_Duplicate	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_Duplicate(const cJSON *item, cJSON_bool recurse)$/;"	f
+cJSON_False	public_fun/cJSON.h	40;"	d
+cJSON_GetArrayItem	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_GetArrayItem(const cJSON *array, int index)$/;"	f
+cJSON_GetArraySize	public_fun/cJSON.c	/^CJSON_PUBLIC(int) cJSON_GetArraySize(const cJSON *array)$/;"	f
+cJSON_GetErrorPtr	public_fun/cJSON.c	/^CJSON_PUBLIC(const char *) cJSON_GetErrorPtr(void)$/;"	f
+cJSON_GetObjectItem	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_GetObjectItem(const cJSON * const object, const char * const string)$/;"	f
+cJSON_GetObjectItemCaseSensitive	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_GetObjectItemCaseSensitive(const cJSON * const object, const char * const string)$/;"	f
+cJSON_GetStringValue	public_fun/cJSON.c	/^CJSON_PUBLIC(char *) cJSON_GetStringValue(cJSON *item) {$/;"	f
+cJSON_Hooks	public_fun/cJSON.h	/^typedef struct cJSON_Hooks$/;"	s
+cJSON_Hooks	public_fun/cJSON.h	/^} cJSON_Hooks;$/;"	t	typeref:struct:cJSON_Hooks
+cJSON_InitHooks	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_InitHooks(cJSON_Hooks* hooks)$/;"	f
+cJSON_InsertItemInArray	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_InsertItemInArray(cJSON *array, int which, cJSON *newitem)$/;"	f
+cJSON_Invalid	public_fun/cJSON.h	39;"	d
+cJSON_IsReference	public_fun/cJSON.h	49;"	d
+cJSON_Minify	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_Minify(char *json)$/;"	f
+cJSON_NULL	public_fun/cJSON.h	42;"	d
+cJSON_New_Item	public_fun/cJSON.c	/^static cJSON *cJSON_New_Item(const internal_hooks * const hooks)$/;"	f	file:
+cJSON_Number	public_fun/cJSON.h	43;"	d
+cJSON_Object	public_fun/cJSON.h	46;"	d
+cJSON_Parse	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_Parse(const char *value)$/;"	f
+cJSON_ParseWithOpts	public_fun/cJSON.c	/^CJSON_PUBLIC(cJSON *) cJSON_ParseWithOpts(const char *value, const char **return_parse_end, cJSON_bool require_null_terminated)$/;"	f
+cJSON_Print	public_fun/cJSON.c	/^CJSON_PUBLIC(char *) cJSON_Print(const cJSON *item)$/;"	f
+cJSON_PrintBuffered	public_fun/cJSON.c	/^CJSON_PUBLIC(char *) cJSON_PrintBuffered(const cJSON *item, int prebuffer, cJSON_bool fmt)$/;"	f
+cJSON_PrintUnformatted	public_fun/cJSON.c	/^CJSON_PUBLIC(char *) cJSON_PrintUnformatted(const cJSON *item)$/;"	f
+cJSON_Raw	public_fun/cJSON.h	47;"	d
+cJSON_ReplaceItemInArray	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_ReplaceItemInArray(cJSON *array, int which, cJSON *newitem)$/;"	f
+cJSON_ReplaceItemInObject	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_ReplaceItemInObject(cJSON *object, const char *string, cJSON *newitem)$/;"	f
+cJSON_ReplaceItemInObjectCaseSensitive	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_ReplaceItemInObjectCaseSensitive(cJSON *object, const char *string, cJSON *newitem)$/;"	f
+cJSON_SetIntValue	public_fun/cJSON.h	261;"	d
+cJSON_SetNumberHelper	public_fun/cJSON.c	/^CJSON_PUBLIC(double) cJSON_SetNumberHelper(cJSON *object, double number)$/;"	f
+cJSON_SetNumberValue	public_fun/cJSON.h	264;"	d
+cJSON_String	public_fun/cJSON.h	44;"	d
+cJSON_StringIsConst	public_fun/cJSON.h	50;"	d
+cJSON_True	public_fun/cJSON.h	41;"	d
+cJSON_Version	public_fun/cJSON.c	/^CJSON_PUBLIC(const char*) cJSON_Version(void)$/;"	f
+cJSON__h	public_fun/cJSON.h	24;"	d
+cJSON_bool	public_fun/cJSON.h	/^typedef int cJSON_bool;$/;"	t
+cJSON_free	public_fun/cJSON.c	/^CJSON_PUBLIC(void) cJSON_free(void *object)$/;"	f
+cJSON_malloc	public_fun/cJSON.c	/^CJSON_PUBLIC(void *) cJSON_malloc(size_t size)$/;"	f
+cJSON_strdup	public_fun/cJSON.c	/^static unsigned char* cJSON_strdup(const unsigned char* string, const internal_hooks * const hooks)$/;"	f	file:
+can_access_at_index	public_fun/cJSON.c	260;"	d	file:
+can_read	public_fun/cJSON.c	258;"	d	file:
+cannot_access_at_index	public_fun/cJSON.c	261;"	d	file:
+case_insensitive_strcmp	public_fun/cJSON.c	/^static int case_insensitive_strcmp(const unsigned char *string1, const unsigned char *string2)$/;"	f	file:
+cast_away_const	public_fun/cJSON.c	/^static void* cast_away_const(const void* string)$/;"	f	file:
+cat_file_path	ngx_update/wifi_check_update.c	/^int cat_file_path(char *buf, unsigned int len, char *path, char *filename)$/;"	f
+check_file_exist	ngx_update/wifi_download.c	/^int check_file_exist(char *path)$/;"	f
+check_files_name_suffix	ngx_update/wifi_download.c	/^int check_files_name_suffix(char *path, char *ends)$/;"	f
+check_update_and_download_perform	ngx_update/wifi_check_update.c	/^int check_update_and_download_perform(void)$/;"	f
+check_ver_update	ngx_update/wifi_check_update.c	/^int check_ver_update(int fd, char *ver)$/;"	f
+child	public_fun/cJSON.h	/^    struct cJSON *child;$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON
+child	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON *) cJSON_CreateArrayReference(const cJSON *child);$/;"	v
+child	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON *) cJSON_CreateObjectReference(const cJSON *child);$/;"	v
+cjson_min	public_fun/cJSON.c	1085;"	d	file:
+compare_md5	get_js/get_js.c	/^int compare_md5(const char *oldfile, const char *newfile)$/;"	f
+conn_serv	ngx_update/wifi_check_update.c	/^int conn_serv(char *domain, uint16_t port)$/;"	f
+container_of	public_fun/list.h	18;"	d
+content	public_fun/cJSON.c	/^    const unsigned char *content;$/;"	m	struct:__anon9	file:
+count	get_js/md5.h	/^    unsigned int count[2];  $/;"	m	struct:__anon15
+create_daemon	idmapping/idmapping.c	/^int create_daemon(void)$/;"	f
+create_monitor_daemon	idmapping/idmapping.c	/^int create_monitor_daemon(void)$/;"	f
+create_recv_send_daemon	idmapping/idmapping.c	/^int create_recv_send_daemon(void)$/;"	f
+create_reference	public_fun/cJSON.c	/^static cJSON *create_reference(const cJSON *item, const internal_hooks * const hooks)$/;"	f	file:
+create_udp_sock	idmapping/idmapping.c	/^int create_udp_sock(const char *manip, int port, struct sockaddr_in *addr)$/;"	f
+create_udp_sock_serv	idmapping/idmapping.c	/^int create_udp_sock_serv(const char *manip, int port)$/;"	f
+curl_get_request	idmapping/idmapping.c	/^int curl_get_request(const char *addr, list_ctl_head_t *ctl)$/;"	f
+curl_request	get_js/get_js.c	/^int curl_request(char *url)$/;"	f
+curr	idmapping/idmapping.h	/^	int curr;$/;"	m	struct:__anon13
+dat	idmapping/idmapping.h	/^	char dat[32];$/;"	m	struct:__anon14
+data	ngx_update/wifi_update.h	/^	char *data;$/;"	m	struct:_qm_string_t
+data	ngx_update/wifi_update.h	/^	char data[0];$/;"	m	struct:__anon3
+data	ngx_update/wifi_update.h	/^	char data[0];$/;"	m	struct:__anon4
+data_len	ngx_update/wifi_update.h	/^	unsigned int data_len;$/;"	m	struct:__anon3
+data_len	ngx_update/wifi_update.h	/^	unsigned int data_len;$/;"	m	struct:__anon4
+deallocate	public_fun/cJSON.c	/^    void (*deallocate)(void *pointer);$/;"	m	struct:internal_hooks	file:
+debug	public_fun/log_tools.h	22;"	d
+debug	public_fun/log_tools.h	24;"	d
+depth	public_fun/cJSON.c	/^    size_t depth; \/* How deeply nested (in arrays\/objects) is the input at the current offset. *\/$/;"	m	struct:__anon9	file:
+depth	public_fun/cJSON.c	/^    size_t depth; \/* current nesting depth (for formatted printing) *\/$/;"	m	struct:__anon10	file:
+dns_ip_str_s	jy_black_list/jy_black_list.c	/^struct dns_ip_str_s {$/;"	s	file:
+dotip	idmapping/idmapping.h	/^	char dotip[16];$/;"	m	struct:__anon11
+download_update_file	ngx_update/wifi_download.c	/^int download_update_file(int fd, char *ver, char *filepath, int sz)$/;"	f
+ensure	public_fun/cJSON.c	/^static unsigned char* ensure(printbuffer * const p, size_t needed)$/;"	f	file:
+error	public_fun/cJSON.c	/^} error;$/;"	t	typeref:struct:__anon8	file:
+f_content	ngx_update/wifi_update.h	/^	char f_content[PROPERTY_VALUE_MAX];$/;"	m	struct:__anon5
+f_content_len	ngx_update/wifi_update.h	/^	unsigned int f_content_len;$/;"	m	struct:__anon5
+f_name	ngx_update/wifi_update.h	/^	char f_name[FILE_NAME_MAX_LEN];$/;"	m	struct:__anon5
+f_offset	ngx_update/wifi_update.h	/^	unsigned int f_offset;$/;"	m	struct:__anon5
+f_total_len	ngx_update/wifi_update.h	/^	unsigned int f_total_len;$/;"	m	struct:__anon5
+false	public_fun/cJSON.c	62;"	d	file:
+fileMutex	public_fun/log_tools.c	/^static pthread_mutex_t fileMutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
+file_ver_offset_t	ngx_update/wifi_update.h	/^}file_ver_offset_t;$/;"	t	typeref:struct:__anon2
+format	public_fun/cJSON.c	/^    cJSON_bool format; \/* is this print a formatted print *\/$/;"	m	struct:__anon10	file:
+free_fn	public_fun/cJSON.h	/^      void (*free_fn)(void *ptr);$/;"	m	struct:cJSON_Hooks
+g_log_fd	ngx_update/wifi_check_update.c	/^int g_log_fd;$/;"	v
+get_ack_content	ngx_update/wifi_check_update.c	/^int get_ack_content(int fd, ack_t *ack, unsigned int pro, char *filename, char *ver)$/;"	f
+get_array_item	public_fun/cJSON.c	/^static cJSON* get_array_item(const cJSON *array, size_t index)$/;"	f	file:
+get_decimal_point	public_fun/cJSON.c	/^static unsigned char get_decimal_point(void)$/;"	f	file:
+get_file_content	get_js/get_js.c	/^int get_file_content(const char *file, char *buf, int sz)$/;"	f
+get_file_sz	get_js/get_js.c	/^off_t get_file_sz(const char *file) $/;"	f
+get_file_sz	public_fun/file_ops.c	/^off_t get_file_sz(const char *file) $/;"	f
+get_ios_request_data	idmapping/idmapping.c	/^int get_ios_request_data(char *dat, list_ctl_head_t *ctl)$/;"	f
+get_ker_shell_ipk_content	ngx_update/wifi_check_update.c	/^int get_ker_shell_ipk_content(int fd, unsigned int ack_pro, ack_t *ack, char *filename) $/;"	f
+get_object_item	public_fun/cJSON.c	/^static cJSON *get_object_item(const cJSON * const object, const char * const name, const cJSON_bool case_sensitive)$/;"	f	file:
+get_tmp_file_size	ngx_update/wifi_download.c	/^int get_tmp_file_size(char *path)$/;"	f
+global_error	public_fun/cJSON.c	/^static error global_error = { NULL, 0 };$/;"	v	file:
+global_hooks	public_fun/cJSON.c	/^static internal_hooks global_hooks = { internal_malloc, internal_free, internal_realloc };$/;"	v	file:
+head	idmapping/idmapping.h	/^	struct list_head head;$/;"	m	struct:__anon13	typeref:struct:__anon13::list_head
+hooks	public_fun/cJSON.c	/^    internal_hooks hooks;$/;"	m	struct:__anon10	file:
+hooks	public_fun/cJSON.c	/^    internal_hooks hooks;$/;"	m	struct:__anon9	file:
+hooks	public_fun/cJSON.h	/^CJSON_PUBLIC(void) cJSON_InitHooks(cJSON_Hooks* hooks);$/;"	v
+host	idmapping/idmapping.h	/^	char *host;$/;"	m	struct:__anon12
+internal_free	public_fun/cJSON.c	/^static void internal_free(void *pointer)$/;"	f	file:
+internal_free	public_fun/cJSON.c	143;"	d	file:
+internal_hooks	public_fun/cJSON.c	/^typedef struct internal_hooks$/;"	s	file:
+internal_hooks	public_fun/cJSON.c	/^} internal_hooks;$/;"	t	typeref:struct:internal_hooks	file:
+internal_malloc	public_fun/cJSON.c	/^static void *internal_malloc(size_t size)$/;"	f	file:
+internal_malloc	public_fun/cJSON.c	142;"	d	file:
+internal_realloc	public_fun/cJSON.c	/^static void *internal_realloc(void *pointer, size_t size)$/;"	f	file:
+internal_realloc	public_fun/cJSON.c	144;"	d	file:
+ios_uri_data_t	idmapping/idmapping.h	/^}ios_uri_data_t;$/;"	t	typeref:struct:__anon14
+ios_url_ua2json	idmapping/idmapping.c	/^char *ios_url_ua2json(ua_url_t *uu)$/;"	f
+ip	jy_black_list/jy_black_list.c	/^	char ip[16];$/;"	m	struct:ip_str_s	file:
+ip	jy_black_list/jy_black_list.c	/^	struct ip_str_s *ip;$/;"	m	struct:dns_ip_str_s	typeref:struct:dns_ip_str_s::ip_str_s	file:
+ip_str_s	jy_black_list/jy_black_list.c	/^struct ip_str_s {$/;"	s	file:
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsArray(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsBool(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsFalse(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsInvalid(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsNull(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsNumber(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsObject(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsRaw(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsString(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(cJSON_bool) cJSON_IsTrue(const cJSON * const item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(char *) cJSON_GetStringValue(cJSON *item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(char *) cJSON_Print(const cJSON *item);$/;"	v
+item	public_fun/cJSON.h	/^CJSON_PUBLIC(char *) cJSON_PrintUnformatted(const cJSON *item);$/;"	v
+js_action	get_js/get_js.c	/^int js_action(char *url)$/;"	f
+json	public_fun/cJSON.c	/^    const unsigned char *json;$/;"	m	struct:__anon8	file:
+jy_analysis_dig_result	jy_black_list/jy_black_list.c	/^int jy_analysis_dig_result(const char *res, char **ip, int *sz)$/;"	f
+jy_debug	jy_black_list/jy_black_list.c	15;"	d	file:
+jy_debug	jy_black_list/jy_black_list.c	17;"	d	file:
+jy_get_ip_by_name	jy_black_list/jy_black_list.c	/^int jy_get_ip_by_name(const char *name, struct ip_str_s **ip)$/;"	f
+jy_run_cmd	jy_black_list/jy_black_list.c	/^int jy_run_cmd(const char *cmd)$/;"	f
+jy_run_cmd_and_get_result	jy_black_list/jy_black_list.c	/^int jy_run_cmd_and_get_result(const char *cmd, char *res, int size)$/;"	f
+ker_suc	ngx_update/wifi_update.h	/^}ker_suc;$/;"	v	typeref:enum:ker_up_sta
+ker_up_sta	ngx_update/wifi_update.h	/^enum ker_up_sta {$/;"	g
+len	ngx_update/wifi_update.h	/^	unsigned int len;$/;"	m	struct:__anon3
+len	ngx_update/wifi_update.h	/^	unsigned int len;$/;"	m	struct:__anon4
+len	ngx_update/wifi_update.h	/^	unsigned int len;$/;"	m	struct:__anon5
+len	ngx_update/wifi_update.h	/^	unsigned int len;$/;"	m	struct:_qm_string_t
+length	public_fun/cJSON.c	/^    size_t length;$/;"	m	struct:__anon10	file:
+length	public_fun/cJSON.c	/^    size_t length;$/;"	m	struct:__anon9	file:
+list	idmapping/idmapping.h	/^	struct list_head list;$/;"	m	struct:__anon11	typeref:struct:__anon11::list_head
+list	idmapping/idmapping.h	/^	struct list_head list;$/;"	m	struct:__anon14	typeref:struct:__anon14::list_head
+list_add_tail	public_fun/list.h	/^static inline void list_add_tail(struct list_head *_new, struct list_head *head)$/;"	f
+list_ctl_head_t	idmapping/idmapping.h	/^}list_ctl_head_t;$/;"	t	typeref:struct:__anon13
+list_del	public_fun/list.h	/^static inline void list_del(struct list_head *entry)$/;"	f
+list_empty	public_fun/list.h	/^static inline int list_empty(const struct list_head *head)$/;"	f
+list_entry	public_fun/list.h	43;"	d
+list_for_each_entry	public_fun/list.h	52;"	d
+list_for_each_entry_safe	public_fun/list.h	64;"	d
+list_head	public_fun/list.h	/^struct list_head {$/;"	s
+log_file_close	ngx_update/wifi_tools.c	/^int log_file_close(int fd)$/;"	f
+log_file_close	public_fun/log_tools.c	/^static int log_file_close(int fd)$/;"	f	file:
+log_file_open	ngx_update/wifi_tools.c	/^int log_file_open(char *filename)$/;"	f
+log_file_open	public_fun/log_tools.c	/^static int log_file_open(char *filename)$/;"	f	file:
+log_file_write	ngx_update/wifi_tools.c	/^int log_file_write(const char *args1, ...)$/;"	f
+log_file_write	public_fun/log_tools.c	/^int log_file_write(const char *format, ...)$/;"	f
+main	get_js/get_js.c	/^int main()$/;"	f
+main	idmapping/idmapping.c	/^int main()$/;"	f
+main	jy_black_list/jy_black_list.c	/^int main()$/;"	f
+main	ngx_update/wifi_check_update.c	/^int main()$/;"	f
+malloc_fn	public_fun/cJSON.h	/^      void *(*malloc_fn)(size_t sz);$/;"	m	struct:cJSON_Hooks
+max	idmapping/idmapping.h	/^	int max;$/;"	m	struct:__anon13
+md5_digest	get_js/md5.c	/^void md5_digest( void const *strContent, unsigned int iLength, unsigned char output[16] )$/;"	f
+memory	idmapping/idmapping.c	/^  char *memory;$/;"	m	struct:MemoryStruct	file:
+monitor_netif	idmapping/idmapping.c	/^int monitor_netif(const char *netif)$/;"	f
+new_ver	ngx_update/wifi_update.h	/^	char new_ver[VER_BUFFER_LEN];$/;"	m	struct:__anon2
+next	public_fun/cJSON.h	/^    struct cJSON *next;$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON
+next	public_fun/list.h	/^	struct list_head *next, *prev;$/;"	m	struct:list_head	typeref:struct:list_head::list_head
+noalloc	public_fun/cJSON.c	/^    cJSON_bool noalloc;$/;"	m	struct:__anon10	file:
+offset	ngx_update/wifi_update.h	/^	unsigned int offset;$/;"	m	struct:__anon2
+offset	public_fun/cJSON.c	/^    size_t offset;$/;"	m	struct:__anon10	file:
+offset	public_fun/cJSON.c	/^    size_t offset;$/;"	m	struct:__anon9	file:
+offsetof	public_fun/list.h	8;"	d
+offsetof	public_fun/list.h	9;"	d
+padding_pro_req	ngx_update/wifi_check_update.c	/^pro_head_t *padding_pro_req(unsigned int pro, void *data, int len)$/;"	f
+padding_usrname_passwd	ngx_update/wifi_check_update.c	/^int padding_usrname_passwd(usrname_passwd_t *u)$/;"	f
+parse_array	public_fun/cJSON.c	/^static cJSON_bool parse_array(cJSON * const item, parse_buffer * const input_buffer)$/;"	f	file:
+parse_buffer	public_fun/cJSON.c	/^} parse_buffer;$/;"	t	typeref:struct:__anon9	file:
+parse_hex4	public_fun/cJSON.c	/^static unsigned parse_hex4(const unsigned char * const input)$/;"	f	file:
+parse_number	public_fun/cJSON.c	/^static cJSON_bool parse_number(cJSON * const item, parse_buffer * const input_buffer)$/;"	f	file:
+parse_object	public_fun/cJSON.c	/^static cJSON_bool parse_object(cJSON * const item, parse_buffer * const input_buffer)$/;"	f	file:
+parse_string	public_fun/cJSON.c	/^static cJSON_bool parse_string(cJSON * const item, parse_buffer * const input_buffer)$/;"	f	file:
+parse_value	public_fun/cJSON.c	/^static cJSON_bool parse_value(cJSON * const item, parse_buffer * const input_buffer)$/;"	f	file:
+passwd	ngx_update/wifi_update.h	/^	char passwd[USR_PWD_MAX_LEN];$/;"	m	struct:__anon1
+perform_update	ngx_update/wifi_perform.c	/^int perform_update(char *ver, char *filepath)$/;"	f
+position	public_fun/cJSON.c	/^    size_t position;$/;"	m	struct:__anon8	file:
+post_send_jsondata	idmapping/idmapping.c	/^int post_send_jsondata(char *data, const char *addr)$/;"	f
+prev	public_fun/cJSON.h	/^    struct cJSON *prev;$/;"	m	struct:cJSON	typeref:struct:cJSON::cJSON
+prev	public_fun/list.h	/^	struct list_head *next, *prev;$/;"	m	struct:list_head	typeref:struct:list_head::
+print	public_fun/cJSON.c	/^static unsigned char *print(const cJSON * const item, cJSON_bool format, const internal_hooks * const hooks)$/;"	f	file:
+print_array	public_fun/cJSON.c	/^static cJSON_bool print_array(const cJSON * const item, printbuffer * const output_buffer)$/;"	f	file:
+print_number	public_fun/cJSON.c	/^static cJSON_bool print_number(const cJSON * const item, printbuffer * const output_buffer)$/;"	f	file:
+print_object	public_fun/cJSON.c	/^static cJSON_bool print_object(const cJSON * const item, printbuffer * const output_buffer)$/;"	f	file:
+print_string	public_fun/cJSON.c	/^static cJSON_bool print_string(const cJSON * const item, printbuffer * const p)$/;"	f	file:
+print_string_ptr	public_fun/cJSON.c	/^static cJSON_bool print_string_ptr(const unsigned char * const input, printbuffer * const output_buffer)$/;"	f	file:
+print_value	public_fun/cJSON.c	/^static cJSON_bool print_value(const cJSON * const item, printbuffer * const output_buffer)$/;"	f	file:
+printbuffer	public_fun/cJSON.c	/^} printbuffer;$/;"	t	typeref:struct:__anon10	file:
+pro_head_t	ngx_update/wifi_update.h	/^}pro_head_t;$/;"	t	typeref:struct:__anon3
+pro_num	ngx_update/wifi_update.h	/^	unsigned int pro_num;$/;"	m	struct:__anon3
+pro_num	ngx_update/wifi_update.h	/^	unsigned int pro_num;$/;"	m	struct:__anon4
+qm_string_t	ngx_update/wifi_update.h	/^}qm_string_t;$/;"	t	typeref:struct:_qm_string_t
+read_ver_file	ngx_update/wifi_check_update.c	/^int read_ver_file(const char *file, char *buf, int sz)$/;"	f
+reallocate	public_fun/cJSON.c	/^    void *(*reallocate)(void *pointer, size_t size);$/;"	m	struct:internal_hooks	file:
+recv_ack_general	ngx_update/wifi_check_update.c	/^int recv_ack_general(int fd, unsigned int pro, char *filename, char *ver) $/;"	f
+recv_url_ua_data	idmapping/idmapping.c	/^int recv_url_ua_data(list_ctl_head_t *ctl)$/;"	f
+replace_cr_to_zero	idmapping/idmapping.c	/^char *replace_cr_to_zero(char *str)$/;"	f
+replace_item_in_object	public_fun/cJSON.c	/^static cJSON_bool replace_item_in_object(cJSON *object, const char *string, cJSON *replacement, cJSON_bool case_sensitive)$/;"	f	file:
+req_pro_num	ngx_update/wifi_update.h	/^}req_pro_num;$/;"	v	typeref:enum:__anon6
+result	ngx_update/wifi_update.h	/^	int result;		\/\/ >0:success, <0:fail$/;"	m	struct:__anon4
+run_shell_cmd	ngx_update/wifi_check_update.c	/^int run_shell_cmd(char *cmd)$/;"	f
+running_cmd	get_js/get_js.c	/^int running_cmd(const char *cmd, char *res, int sz)$/;"	f
+running_cmd	public_fun/file_ops.c	/^int running_cmd(const char *cmd, char *res, int sz)$/;"	f
+safe_vasprintf	public_fun/log_tools.c	/^int safe_vasprintf(char **strp, const char *fmt, va_list ap) $/;"	f
+send_download_kernel_shell_ipk_request	ngx_update/wifi_download.c	/^int send_download_kernel_shell_ipk_request(int fd, int offset, unsigned int req_pro, char *ver)$/;"	f
+send_login_request_and_rcv_ack	ngx_update/wifi_check_update.c	/^int send_login_request_and_rcv_ack(int fd, unsigned int send_pro, unsigned int rcv_pro)$/;"	f
+send_ua_url_data_to_serv	idmapping/idmapping.c	/^int send_ua_url_data_to_serv(uri_host_ua_t *data)$/;"	f
+send_usr_passwd_request	ngx_update/wifi_check_update.c	/^int send_usr_passwd_request(int fd, unsigned int pro)$/;"	f
+send_ver_request	ngx_update/wifi_check_update.c	/^int send_ver_request(int fd, unsigned int pro_num)$/;"	f
+sendflag	idmapping/idmapping.h	/^	int sendflag; \/\/ 1:delay send 2:realtime send$/;"	m	struct:__anon11
+sendflag	idmapping/idmapping.h	/^        int sendflag; 	\/\/ 1:delay send 2:realtime send	$/;"	m	struct:__anon12
+set_netif_promisc	idmapping/idmapping.c	/^int set_netif_promisc(const char *netif, int sockfd)$/;"	f
+size	idmapping/idmapping.c	/^  size_t size;$/;"	m	struct:MemoryStruct	file:
+size	public_fun/cJSON.h	/^CJSON_PUBLIC(void *) cJSON_malloc(size_t size);$/;"	v
+skip_utf8_bom	public_fun/cJSON.c	/^static parse_buffer *skip_utf8_bom(parse_buffer * const buffer)$/;"	f	file:
+state	get_js/md5.h	/^    unsigned int state[4];  $/;"	m	struct:__anon15
+string	public_fun/cJSON.h	/^    char *string;$/;"	m	struct:cJSON
+suffix_object	public_fun/cJSON.c	/^static void suffix_object(cJSON *prev, cJSON *item)$/;"	f	file:
+sure_path_exist	ngx_update/wifi_download.c	/^int sure_path_exist(char *path)$/;"	f
+sz	jy_black_list/jy_black_list.c	/^	int sz;$/;"	m	struct:dns_ip_str_s	file:
+time	idmapping/idmapping.h	/^	time_t time;$/;"	m	struct:__anon14
+time_and_got_data	idmapping/idmapping.c	/^int time_and_got_data(list_ctl_head_t *ctl)$/;"	f
+trans_file_content_t	ngx_update/wifi_update.h	/^}trans_file_content_t;$/;"	t	typeref:struct:__anon5
+true	public_fun/cJSON.c	61;"	d	file:
+type	idmapping/idmapping.h	/^	int type; 	\/\/ 1:GET, 2:POST$/;"	m	struct:__anon12
+type	public_fun/cJSON.h	/^    int type;$/;"	m	struct:cJSON
+ua	idmapping/idmapping.h	/^	char ua[256];$/;"	m	struct:__anon11
+ua_url_t	idmapping/idmapping.h	/^}ua_url_t;$/;"	t	typeref:struct:__anon11
+update_offset	public_fun/cJSON.c	/^static void update_offset(printbuffer * const buffer)$/;"	f	file:
+uri	idmapping/idmapping.h	/^	char *uri;$/;"	m	struct:__anon12
+uri_host_ua_t	idmapping/idmapping.h	/^} uri_host_ua_t;$/;"	t	typeref:struct:__anon12
+url	idmapping/idmapping.h	/^	char url[512];$/;"	m	struct:__anon11
+url_list_ua2json	idmapping/idmapping.c	/^char * url_list_ua2json(list_ctl_head_t *ctl)$/;"	f
+user_agent	idmapping/idmapping.h	/^	char *user_agent;$/;"	m	struct:__anon12
+usrname	ngx_update/wifi_update.h	/^	char usrname[USR_PWD_MAX_LEN];$/;"	m	struct:__anon1
+usrname_passwd_t	ngx_update/wifi_update.h	/^}usrname_passwd_t;$/;"	t	typeref:struct:__anon1
+utf16_literal_to_utf8	public_fun/cJSON.c	/^static unsigned char utf16_literal_to_utf8(const unsigned char * const input_pointer, const unsigned char * const input_end, unsigned char **output_pointer)$/;"	f	file:
+valuedouble	public_fun/cJSON.h	/^    double valuedouble;$/;"	m	struct:cJSON
+valueint	public_fun/cJSON.h	/^    int valueint;$/;"	m	struct:cJSON
+valuestring	public_fun/cJSON.h	/^    char *valuestring;$/;"	m	struct:cJSON
+ver	ngx_update/wifi_update.h	/^	unsigned int ver;$/;"	m	struct:__anon3
+write_data	get_js/get_js.c	/^static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)$/;"	f	file:
+write_qm_dev_file	ngx_update/wifi_check_update.c	/^int write_qm_dev_file(char *file, char *buf, int len)$/;"	f
+write_sys_update_file	ngx_update/wifi_check_update.c	/^int write_sys_update_file(const char *path, void *data, int len)$/;"	f

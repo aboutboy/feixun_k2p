@@ -1,0 +1,33 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2009-2012 OpenWrt.org
+
+START=50
+NGINX_BIN=/usr/sbin/nginx
+NGINX_CONF="/etc/nginx/nginx.conf"
+start() {
+	mkdir -p /var/log/nginx
+	mkdir -p /var/lib/nginx
+	$NGINX_BIN
+	lan_ip=$(uci get network.lan.ipaddr)	
+	iptables -t nat -I PREROUTING -p tcp --dport 80 -j DNAT --to ${lan_ip}:8080
+	#wan=$(uci get network.wan.ifname)
+	#iptables -I INPUT -i $wan -p tcp --dport 8080 -j DROP
+}
+
+stop() {
+	$NGINX_BIN -s stop
+	lan_ip=$(uci get network.lan.ipaddr)	
+	iptables -t nat -D PREROUTING -p tcp --dport 80 -j DNAT --to ${lan_ip}:8080
+	#wan=$(uci get network.wan.ifname)
+	#iptables -D INPUT -i $wan -p tcp --dport 8080 -j DROP
+	#iptables -D INPUT -i $wan -p tcp --dport 80 -j DROP
+}
+
+reload() {
+	$NGINX_BIN -s reload
+}
+
+shutdown() {
+	$NGINX_BIN -s quit
+}
+
