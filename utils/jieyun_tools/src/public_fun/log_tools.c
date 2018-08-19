@@ -40,7 +40,7 @@ int safe_vasprintf(char **strp, const char *fmt, va_list ap)
 
 int log_file_write(const char *format, ...)
 {
-    char log_buf[PROPERTY_VALUE_MAX] = {0};
+    char log_buf[PROPERTY_LOG_VALUE_MAX] = {0};
     int fd = -1;
     va_list args;
     char *fmt = NULL;

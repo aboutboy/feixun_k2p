@@ -10,8 +10,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <pthread.h>
-
-#define PROPERTY_VALUE_MAX 	(2048)
+#define PROPERTY_LOG_VALUE_MAX  (2048)
 #define MAX_LOG_SIZE         	(128*1024)
 #define LOG_FILE		"/tmp/jy.log"
 int log_file_write(const char *args1, ...);
