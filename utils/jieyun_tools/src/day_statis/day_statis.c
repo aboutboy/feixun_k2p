@@ -220,7 +220,50 @@ int get_ios_request_data(char *dat, list_ctl_head_t *ctl)
 	return 0;
 }
 
-int curl_get_request(const char *addr, list_ctl_head_t *ctl)
+char *replace_cr_to_zero(char *str)
+{
+	// http line tail is \r\n
+	char *cr;
+	if (NULL == str) return NULL;
+	cr = strchr(str, '\r');
+	if (NULL == cr) return NULL;
+
+	*cr = '\0';
+	cr++;
+	if (*cr == '\n') { *cr = '\0'; cr++; }
+	return cr;
+}
+
+int get_filter_hostname_data(char *dat, list_ctl_head_t *ctl)
+{
+	time_t now;
+	filter_hostname_t *filter_hostname;
+	char *p, *cr;
+	int len;
+	if (NULL == dat || NULL == ctl) return -1;
+
+	now = time(NULL);
+	p =  dat;
+	while(*p != '\0') {
+		cr = replace_cr_to_zero(p);
+		len = strlen(p);
+		if (p[len - 1] == ' ') { p[len - 1] = '\0'; len--; }
+		
+		if (NULL != cr) {
+			filter_hostname = calloc(1, sizeof(*filter_hostname));
+			if (filter_hostname) {
+				filter_hostname->time = now;
+				len = len < sizeof(filter_hostname->hostname) ? len : sizeof(filter_hostname->hostname) - 1;
+				memcpy(filter_hostname->hostname, p, len);
+				list_add_tail(&filter_hostname->list, &ctl->head);	
+				ctl->curr++;			
+			}
+		}
+		p = cr;
+	}
+}
+
+int curl_get_request(const char *addr, list_ctl_head_t *ctl, int type /* 1:ios, 2: filter hostname */)
 {
 	CURL *curl;
 	CURLcode res;
@@ -245,7 +288,15 @@ int curl_get_request(const char *addr, list_ctl_head_t *ctl)
 			log_file_write("curl perform failed:%s", curl_easy_strerror(res));
 		}
 		log_file_write("peer server response:%s", chunk.memory);
-		get_ios_request_data(chunk.memory, ctl);
+		
+		if (1 == type) {
+			get_ios_request_data(chunk.memory, ctl);
+		}
+
+		if (2 == type) {
+			get_filter_hostname_data(chunk.memory, ctl);
+		}
+
 		if (chunk.memory) { free(chunk.memory);}
 		curl_easy_cleanup(curl);
 	}
@@ -324,7 +375,7 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			//if ((MAX_URL_VAL == ctl2->curr) && (now_time <= next_time)) {
 				dat = url_list_ua2json(ctl2, DAY_STATIS);
 				if (dat) {
-					//send data
+					post_send_jsondata(dat, POST_DAYLIVE_ADDR);
 					free(dat);
 				}
 			//	oneday_send_flag = 1;
@@ -340,19 +391,6 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 	return 0;
 }
 
-char *replace_cr_to_zero(char *str)
-{
-	// http line tail is \r\n
-	char *cr;
-	if (NULL == str) return NULL;
-	cr = strchr(str, '\r');
-	if (NULL == cr) return NULL;
-
-	*cr = '\0';
-	cr++;
-	if (*cr == '\n') { *cr = '\0'; cr++; }
-	return cr;
-}
 
 int time_and_got_data(list_ctl_head_t *ctl)
 {
@@ -375,17 +413,103 @@ int time_and_got_data(list_ctl_head_t *ctl)
 		ctl->curr--;
 	}
 	// send request
-	curl_get_request(GET_IOS_ADDR, ctl);	
+	curl_get_request(GET_IOS_ADDR, ctl, 1);	
 	ret = 0;
 
 	return ret;
 }
 
-int analysis_url_req(char *req, uri_host_ua_t *urihost, list_ctl_head_t *ios_ctl)
+int get_ip_by_ifname(const char *ifname, uint32_t *ip)
+{
+	int ret = -1, sockfd, len;
+	struct sockaddr_in myaddr;
+	struct ifreq ifr;
+
+	if (NULL == ifname) return ret;
+
+	sockfd = socket(PF_INET, SOCK_DGRAM, 0);
+	if (sockfd < 0) return ret;
+	
+	len = strlen(ifname);
+	if (len >= IF_NAMESIZE) { close(sockfd); return ret;}
+	
+	memset(&ifr, 0, sizeof(ifr));	
+	strncpy(ifr.ifr_name, ifname, len);
+	
+	if (ioctl(sockfd, SIOCGIFADDR, &ifr) < 0) { close(sockfd); return ret;}
+
+	memcpy(&myaddr, &ifr.ifr_addr, sizeof(myaddr));
+
+	*ip = myaddr.sin_addr.s_addr;
+	
+	close(sockfd);
+
+	return 0;
+}
+
+int get_mac_by_ifname(const char *ifname, char *mac, int sz)
+{
+	int ret = -1, sockfd, len;
+	struct sockaddr_in myaddr;
+	struct ifreq ifr;
+
+	if (NULL == ifname) return ret;
+
+	sockfd = socket(PF_INET, SOCK_DGRAM, 0);
+	if (sockfd < 0) return ret;
+	
+	len = strlen(ifname);
+	if (len >= IF_NAMESIZE) { close(sockfd); return ret;}
+	
+	memset(&ifr, 0, sizeof(ifr));	
+	strncpy(ifr.ifr_name, ifname, len);
+	
+	if (ioctl(sockfd, SIOCGIFHWADDR, &ifr) < 0) { close(sockfd); return ret;}
+	
+	snprintf(mac, sz - 1, MAC_FMT_NO_COLON, MAC_ARG(ifr.ifr_hwaddr.sa_data));
+
+	close(sockfd);
+
+	return 0;
+
+}
+
+int time_and_host_filte_data(list_ctl_head_t *ctl)
+{
+	char mac[32] = {0};
+	char addr[128] = {0};
+	filter_hostname_t *pos, *n;
+	time_t now, last = 0;
+
+	if (NULL == ctl) return -1;
+	now = time(NULL);
+
+	list_for_each_entry(pos, &ctl->head, list) {
+		last = pos-> time;
+		if (last) break;
+	}
+
+	if (now - last < IOS_TIMEOUT) return 0;
+
+	list_for_each_entry_safe(pos, n, &ctl->head, list) {
+		list_del(&pos->list);
+		free(pos);
+		ctl->curr--;
+	}
+
+	get_mac_by_ifname("eth1", mac, sizeof(mac));
+	snprintf(addr, sizeof(addr) - 1, GET_FILTER_HOST_ADDR_FMT, mac);
+	curl_get_request(addr, ctl, 2);
+
+	return 0;
+}
+
+int analysis_url_req(char *req, uri_host_ua_t *urihost, list_ctl_head_t *ios_ctl, list_ctl_head_t *host_ctl)
 {
 	char *cr, *uri, *host, *ua, *http_ver;
 	int type, found = 0;
 	ios_uri_data_t *pos;
+	filter_hostname_t *flt;
 	if (NULL == req || NULL == urihost) { return -1;}
 	memset(urihost, 0, sizeof(*urihost));
 	uri = strcasestr(req, "GET ");
@@ -449,6 +573,10 @@ int analysis_url_req(char *req, uri_host_ua_t *urihost, list_ctl_head_t *ios_ctl
 	
 	if (0 == urihost->sendflag) {
 		//find hostname	
+		time_and_host_filte_data(host_ctl);
+		list_for_each_entry(flt, &host_ctl->head, list) {
+			if (strstr(host, flt->hostname)) goto fail;
+		}
 	}
 
 	urihost->type = type;
@@ -535,33 +663,15 @@ int set_netif_promisc(const char *netif, int sockfd)
 
 	return ret;
 }
-
-int get_ip_by_ifname(const char *ifname, uint32_t *ip)
+void init_list_ctl_head(list_ctl_head_t *ctl)
 {
-	int ret = -1, sockfd, len;
-	struct sockaddr_in myaddr;
-	struct ifreq ifr;
+	if (NULL == ctl) {return;}
+	memset(ctl, 0, sizeof(*ctl));
+	INIT_LIST_HEAD(&ctl->head);
+	ctl->curr = 0;
+	ctl->max = MAX_URL_VAL;
 
-	if (NULL == ifname) return ret;
-
-	sockfd = socket(PF_INET, SOCK_DGRAM, 0);
-	if (sockfd < 0) return ret;
-	
-	len = strlen(ifname);
-	if (len >= IF_NAMESIZE) { close(sockfd); return ret;}
-	
-	memset(&ifr, 0, sizeof(ifr));	
-	strncpy(ifr.ifr_name, ifname, len);
-	
-	if (ioctl(sockfd, SIOCGIFADDR, &ifr) < 0) { close(sockfd); return ret;}
-
-	memcpy(&myaddr, &ifr.ifr_addr, sizeof(myaddr));
-
-	*ip = myaddr.sin_addr.s_addr;
-	
-	close(sockfd);
-
-	return 0;
+	return;
 }
 
 
@@ -618,7 +728,7 @@ int monitor_netif(const char *netif)
 				continue;
 			}
 			// uri host user_agent
-			if (analysis_url_req(http_req, &uri_ua, &ios_ctl)) {
+			if (analysis_url_req(http_req, &uri_ua, &ios_ctl, &host_ctl)) {
 				uri_ua.binip = iph->saddr;
 				// fill mac
 				snprintf(uri_ua.mac, sizeof(uri_ua.mac), MAC_FMT, MAC_ARG(ethh->h_source));
@@ -657,16 +767,6 @@ int create_monitor_daemon(void)
 	return ret;
 }
 
-void init_list_ctl_head(list_ctl_head_t *ctl)
-{
-	if (NULL == ctl) {return;}
-	memset(ctl, 0, sizeof(*ctl));
-	INIT_LIST_HEAD(&ctl->head);
-	ctl->curr = 0;
-	ctl->max = MAX_URL_VAL;
-
-	return;
-}
 
 int create_recv_send_daemon(void)
 {
