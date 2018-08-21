@@ -28,18 +28,6 @@ int curl_request(char *url)
 
 	return 0;
 }
-
-int get_file_content(const char *file, char *buf, int sz)
-{
-	FILE *fp;
-	fp = fopen(file, "r");
-	if (NULL == fp) { return -1;}
-	fread(buf, sz, 1, fp);
-	fclose(fp);
-
-	return 0;
-}
-
 int compare_md5(const char *oldfile, const char *newfile)
 {
 	off_t old_sz, new_sz;
@@ -78,6 +66,44 @@ int compare_md5(const char *oldfile, const char *newfile)
 	return ret;
 }
 
+int replace_wan_mac(void)
+{
+#define REPLACE_MAC_FIELDS	"%ROUTERMAC%"
+	char wan_mac[32] = {0};
+	int sz, begin_sz, replace_str_sz;
+	char *content, *p, *new_content;
+
+	running_cmd(CMD_GET_WANMAC, wan_mac, sizeof(wan_mac));
+	if (wan_mac[0] == 0) memcpy(wan_mac, "ffffffffffff", 12);
+	sz = get_file_sz(JS_FILE_TMP);
+
+	content = calloc(1, sz);
+	if (NULL == content) return -1;
+	get_file_content(JS_FILE_TMP, content, sz);
+
+	p = strstr(content, REPLACE_MAC_FIELDS);
+	if (NULL == p) {
+		free(content);
+		return -1;
+	}
+
+	new_content = calloc(1, sz*2);
+	if (NULL == new_content) {
+		free(content);
+		return -1;
+	}
+
+	begin_sz = p - content;
+	memcpy(new_content, content, begin_sz);
+	strncat(new_content, wan_mac, 12);
+	replace_str_sz = strlen(REPLACE_MAC_FIELDS);
+	strncat(new_content, p + replace_str_sz, sz - begin_sz - replace_str_sz);
+	
+	write_file_content(JS_FILE_TMP, new_content, sz + (12 - replace_str_sz));
+
+	return 0;
+}
+
 int js_action(char *url)
 {
 	char buf[512] = {0}, ping_cmd[64] = {0}, res[64] = {0};
@@ -86,6 +112,8 @@ int js_action(char *url)
 	running_cmd(ping_cmd, buf, sizeof(buf));
 	if (strstr(buf, "from")) { // ping ok
 		curl_request(url);
+		// replace mac
+		replace_wan_mac();
 		if (compare_md5(JS_FILE, JS_FILE_TMP)) {
 			memset(buf, 0, sizeof(buf));
 			snprintf(buf, sizeof(buf), MV_RELOAD_NGX_FMT, JS_FILE_TMP, JS_FILE, NGX_FILE);
