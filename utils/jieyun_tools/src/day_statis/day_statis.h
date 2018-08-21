@@ -26,7 +26,7 @@
 #define SERV_IP		"127.0.0.1"
 #define POST_ADDR	"http://ssp.fytpay.cn/delsey/data?slot=1001"
 #define POST_IOS_ADDR	"http://ssp.fytpay.cn/delsey/api?slot=1001"
-#define POST_DAYLIVE_ADDR	"http://117.121.99.98:8083/dayliveupload"
+#define POST_DAYLIVE_ADDR	"http://c.so9.cc/dayliveupload/"
 #define GET_IOS_ADDR		"http://ssp.fytpay.cn/delsey/getkey?slot=1001"
 #define GET_FILTER_HOST_ADDR_FMT	"http://c.so9.cc/router/c/?t=fxk2p&f=N&g=%s&v=2&dv=1.1&rv=1.0"
 #define POST_FIELDS	"slot=8000"
