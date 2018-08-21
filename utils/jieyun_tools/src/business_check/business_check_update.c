@@ -482,7 +482,7 @@ int check_update_and_download_perform(void)
 	return 0;
 }
 
-
+#define INTERVAL_TIME (60*60)
 int main()
 {
 	int ret = 0;
@@ -492,7 +492,7 @@ int main()
 			log_file_write("check_update failed.");
 		}
 		get_js();
-		sleep(10);
+		sleep(INTERVAL_TIME);
 	}
 
 	return ret;
