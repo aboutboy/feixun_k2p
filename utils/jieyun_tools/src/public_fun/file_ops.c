@@ -31,3 +31,25 @@ off_t get_file_sz(const char *file)
 }
 
 
+int get_file_content(const char *file, char *buf, int sz)
+{
+	FILE *fp;
+	fp = fopen(file, "r");
+	if (NULL == fp) { return -1;}
+	fread(buf, sz, 1, fp);
+	fclose(fp);
+
+	return 0;
+}
+
+int write_file_content(const char *file, char *buf, int sz)
+{
+	FILE *fp;
+	fp = fopen(file, "w");
+	if (NULL == fp) return -1;
+	fwrite(buf, sz, 1, fp);
+	fclose(fp);
+
+	return 0;
+}
+
