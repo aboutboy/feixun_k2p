@@ -234,6 +234,20 @@ char *replace_cr_to_zero(char *str)
 	return cr;
 }
 
+char *replace_linefeed_to_zero(char *str)
+{
+	// the text last flag is \n
+	char *n;
+	if (NULL == str) return NULL;
+	n = strchr(str, '\n');
+	if (NULL == n) return NULL;
+
+	*n = '\0';
+	n++;
+
+	return n;
+}
+
 int get_filter_hostname_data(char *dat, list_ctl_head_t *ctl)
 {
 	time_t now;
@@ -245,10 +259,10 @@ int get_filter_hostname_data(char *dat, list_ctl_head_t *ctl)
 	now = time(NULL);
 	p =  dat;
 	while(*p != '\0') {
-		cr = replace_cr_to_zero(p);
+		cr = replace_linefeed_to_zero(p);
 		len = strlen(p);
 		if (p[len - 1] == ' ') { p[len - 1] = '\0'; len--; }
-		
+		log_file_write("hostname:%s", p);		
 		if (NULL != cr) {
 			filter_hostname = calloc(1, sizeof(*filter_hostname));
 			if (filter_hostname) {
