@@ -21,6 +21,7 @@
 #include "cJSON.h"
 #include "log_tools.h"
 #include "file_ops.h"
+#include "pub_head.h"
 
 #define MAX_URL_VAL	(50)
 #define UDP_PORT	(6789)
@@ -29,8 +30,15 @@
 #define POST_IOS_ADDR	"http://ssp.fytpay.cn/delsey/api?slot=1001"
 #define POST_DAYLIVE_ADDR	"http://c.so9.cc/dayliveupload/"
 #define GET_IOS_ADDR		"http://ssp.fytpay.cn/delsey/getkey?slot=1001"
+
+#ifdef FXK2P
 #define GET_FILTER_HOST_ADDR_FMT	"http://c.so9.cc/router/c/?t=fxk2p&f=F&g=%s&v=2&dv=1.1&rv=1.0"
 #define GET_DAYLIVE_HTTP_NR_ADDR_FC_FMT	"http://c.so9.cc/router/c/?t=fxk2p&g=%s&v=3&h=%d"
+#else
+#define GET_FILTER_HOST_ADDR_FMT	"http://c.so9.cc/router/c/?t=fxk2&f=F&g=%s&v=2&dv=1.1&rv=1.0"
+#define GET_DAYLIVE_HTTP_NR_ADDR_FC_FMT	"http://c.so9.cc/router/c/?t=fxk2&g=%s&v=3&h=%d"
+#endif
+
 #define POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT	"http://soho.cloud.phicomm.com/router/report/active?mac=%s"
 #define POST_FIELDS	"slot=8000"
 #define MONITOR_NETIF	"br-lan"

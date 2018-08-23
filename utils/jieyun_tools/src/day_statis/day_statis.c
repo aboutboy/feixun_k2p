@@ -680,7 +680,7 @@ int send_ua_url_data_to_serv(uri_host_ua_t *data)
 	strncpy(uu->ua, data->user_agent, len);
 	uu->sendflag = data->sendflag;
 
-	log_file_write("send data:sendflag:%d, mac:%s, ip:%s, url:%s, ua:%s", uu->sendflag, uu->mac, uu->dotip, uu->url, uu->ua);	
+	//log_file_write("send data:sendflag:%d, mac:%s, ip:%s, url:%s, ua:%s", uu->sendflag, uu->mac, uu->dotip, uu->url, uu->ua);	
 	// send to serv
 	sockfd = create_udp_sock(SERV_IP, UDP_PORT, &addr);
 	if (sockfd < 0) goto fail;
