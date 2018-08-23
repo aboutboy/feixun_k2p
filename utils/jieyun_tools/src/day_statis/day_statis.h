@@ -31,7 +31,7 @@
 #define GET_IOS_ADDR		"http://ssp.fytpay.cn/delsey/getkey?slot=1001"
 #define GET_FILTER_HOST_ADDR_FMT	"http://c.so9.cc/router/c/?t=fxk2p&f=F&g=%s&v=2&dv=1.1&rv=1.0"
 #define GET_DAYLIVE_HTTP_NR_ADDR_FC_FMT	"http://c.so9.cc/router/c/?t=fxk2p&g=%s&v=3&h=%d"
-#define POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT	"http://172.17.227.247:9110/router/report/active?mac=%s"
+#define POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT	"http://soho.cloud.phicomm.com/router/report/active?mac=%s"
 #define POST_FIELDS	"slot=8000"
 #define MONITOR_NETIF	"br-lan"
 #define IOS_REALTIME_HOST	"iosapps.itunes.apple.com"
