@@ -156,7 +156,7 @@ int post_send_jsondata(char *data, const char *addr)
 	CURL *curl;
 	CURLcode res;
   	struct MemoryStruct chunk;
-	if (NULL == data || NULL == addr) {return 0;}
+	if (NULL == addr) {return 0;}
       	
 	chunk.memory = malloc(1);  /* will be grown as needed by realloc above */
   	chunk.size = 0;    /* no data at this point */
@@ -180,7 +180,7 @@ int post_send_jsondata(char *data, const char *addr)
 		if (res != CURLE_OK) {
 			log_file_write("curl perform failed:%s", curl_easy_strerror(res));
 		}
-		log_file_write("peer server response:%s", chunk.memory);
+		log_file_write("peer server post response:%s", chunk.memory);
 		curl_slist_free_all(plist);
 		if (chunk.memory) { free(chunk.memory);}
 		curl_easy_cleanup(curl);
@@ -283,7 +283,6 @@ int curl_get_request(const char *addr, list_ctl_head_t *ctl, int type /* 1:ios, 
 	CURLcode res;
   	struct MemoryStruct chunk;
 	if (NULL == addr) {return 0;}
-      	
 	chunk.memory = malloc(1);  /* will be grown as needed by realloc above */
   	chunk.size = 0;    /* no data at this point */
 
@@ -301,7 +300,7 @@ int curl_get_request(const char *addr, list_ctl_head_t *ctl, int type /* 1:ios, 
 		if (res != CURLE_OK) {
 			log_file_write("curl perform failed:%s", curl_easy_strerror(res));
 		}
-		log_file_write("peer server response:%s", chunk.memory);
+		log_file_write("peer server get response:%s", chunk.memory);
 		
 		if (1 == type) {
 			get_ios_request_data(chunk.memory, ctl);
@@ -318,6 +317,47 @@ int curl_get_request(const char *addr, list_ctl_head_t *ctl, int type /* 1:ios, 
 	return 0;	
 }
 
+int get_wanifname(char *wanifname, int sz)
+{
+	int len;
+	if (NULL == wanifname || sz <= 4) return -1;
+	running_cmd(CMD_GET_WANIFNAME, wanifname, sz);
+	if (wanifname[0] == '\0')  memcpy(wanifname, "eth1", 4);
+	len = strlen(wanifname);
+	if (wanifname[len - 1] == '\n') wanifname[len - 1] = '\0';	
+	
+	return 0;
+}
+
+int get_mac_by_ifname(const char *ifname, char *mac, int sz, int type /*0: no colon, 1: need colon*/)
+{
+	int ret = -1, sockfd, len;
+	struct sockaddr_in myaddr;
+	struct ifreq ifr;
+
+	if (NULL == ifname || NULL == mac || sz <= 0) return ret;
+
+	sockfd = socket(PF_INET, SOCK_DGRAM, 0);
+	if (sockfd < 0) return ret;
+	
+	len = strlen(ifname);
+	if (len >= IF_NAMESIZE) { close(sockfd); return ret;}
+	
+	memset(&ifr, 0, sizeof(ifr));	
+	strncpy(ifr.ifr_name, ifname, len);
+	
+	if (ioctl(sockfd, SIOCGIFHWADDR, &ifr) < 0) { close(sockfd); return ret;}
+	if (0 == type) {	
+		snprintf(mac, sz - 1, MAC_FMT_NO_COLON, MAC_ARG(ifr.ifr_hwaddr.sa_data));
+	}
+	if (1 == type) {
+		snprintf(mac, sz -1, MAC_FMT, MAC_ARG(ifr.ifr_hwaddr.sa_data));
+	}
+	close(sockfd);
+
+	return 0;
+
+}
 
 int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 {
@@ -326,6 +366,17 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 	char *dat;
 	time_t next_time, now_time;	
 	int oneday_send_flag = 0;
+	unsigned int http_num = 0;
+	char wanifname[32] = {0}, wanmac[32] = {0}, wanmac_colon[32] = {0};
+	
+
+	get_wanifname(wanifname, sizeof(wanifname));
+	get_mac_by_ifname(wanifname, wanmac, sizeof(wanmac), 0);
+	if (wanmac[0] == '\0') memcpy(wanmac, "ffffffffffff", 12);
+
+	get_mac_by_ifname(wanifname, wanmac_colon, sizeof(wanmac_colon), 1);
+	if (wanmac_colon[0] == '\0') memcpy(wanmac_colon, "ff:ff:ff:ff:ff:ff", 17);
+	
 	for (i = 0; i < 10; i++) {
 		sock = create_udp_sock_serv(SERV_IP, UDP_PORT);
 		if (sock < 0) { 
@@ -355,6 +406,7 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			continue;
 		}
 
+		++http_num;
 		if (1 == uu->sendflag) {
 			list_add_tail(&uu->list, &ctl1->head);
 			ctl1->curr++;	
@@ -386,20 +438,40 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			list_add_tail(&uu->list, &ctl2->head);	
 			ctl2->curr++;
 			
-			//if ((MAX_URL_VAL == ctl2->curr) && (now_time <= next_time)) {
+			if ((MAX_URL_VAL == ctl2->curr) && (now_time <= next_time)) {
 				dat = url_list_ua2json(ctl2, DAY_STATIS);
 				if (dat) {
 					post_send_jsondata(dat, POST_DAYLIVE_ADDR);
 					free(dat);
 				}
-			//	oneday_send_flag = 1;
-			//}
+
+				char fx_addr[128] = {0};
+				snprintf(fx_addr, sizeof(fx_addr) - 1, POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT, wanmac_colon);
+				post_send_jsondata("50", fx_addr);
+				oneday_send_flag = 1;
+			}
+
+			if ((MAX_URL_VAL > ctl2->curr) && (now_time > next_time)) {
+				dat = url_list_ua2json(ctl2, DAY_STATIS);
+				if (dat) {
+					post_send_jsondata(dat, POST_DAYLIVE_ADDR);
+					free(dat);
+				}
+				oneday_send_flag = 1;
+			}
 			
 			if (oneday_send_flag && (now_time > next_time)) {
+				//report http number
+				char buf[128] = {0};
+				snprintf(buf, sizeof(buf), GET_DAYLIVE_HTTP_NR_ADDR_FC_FMT,wanmac, http_num);
+				curl_get_request(buf, NULL, 0);
+				http_num = 0;
+
 				next_time = now_time + ONE_DAY_SECONDS;
 				oneday_send_flag = 0;
 			} 
 		}
+
 	}
 	close(sock);
 	return 0;
@@ -461,37 +533,12 @@ int get_ip_by_ifname(const char *ifname, uint32_t *ip)
 	return 0;
 }
 
-int get_mac_by_ifname(const char *ifname, char *mac, int sz)
-{
-	int ret = -1, sockfd, len;
-	struct sockaddr_in myaddr;
-	struct ifreq ifr;
-
-	if (NULL == ifname) return ret;
-
-	sockfd = socket(PF_INET, SOCK_DGRAM, 0);
-	if (sockfd < 0) return ret;
-	
-	len = strlen(ifname);
-	if (len >= IF_NAMESIZE) { close(sockfd); return ret;}
-	
-	memset(&ifr, 0, sizeof(ifr));	
-	strncpy(ifr.ifr_name, ifname, len);
-	
-	if (ioctl(sockfd, SIOCGIFHWADDR, &ifr) < 0) { close(sockfd); return ret;}
-	
-	snprintf(mac, sz - 1, MAC_FMT_NO_COLON, MAC_ARG(ifr.ifr_hwaddr.sa_data));
-
-	close(sockfd);
-
-	return 0;
-
-}
 
 int time_and_host_filte_data(list_ctl_head_t *ctl)
 {
 	char mac[32] = {0};
 	char addr[128] = {0};
+	char wanifname[32] = {0};
 	filter_hostname_t *pos, *n;
 	time_t now, last = 0;
 
@@ -499,7 +546,7 @@ int time_and_host_filte_data(list_ctl_head_t *ctl)
 	now = time(NULL);
 
 	list_for_each_entry(pos, &ctl->head, list) {
-		last = pos-> time;
+		last = pos->time;
 		if (last) break;
 	}
 
@@ -510,8 +557,10 @@ int time_and_host_filte_data(list_ctl_head_t *ctl)
 		free(pos);
 		ctl->curr--;
 	}
-
-	get_mac_by_ifname("eth1", mac, sizeof(mac));
+	get_wanifname(wanifname, sizeof(wanifname));
+	get_mac_by_ifname(wanifname, mac, sizeof(mac), 0);
+	if (mac[0] == '\0') memcpy(mac, "ffffffffffff", 12);
+	
 	snprintf(addr, sizeof(addr) - 1, GET_FILTER_HOST_ADDR_FMT, mac);
 	curl_get_request(addr, ctl, 2);
 
@@ -699,6 +748,7 @@ int monitor_netif(const char *netif)
 	struct ethhdr *ethh;
 	char *http_req;
 	uint32_t wanip;
+	char wanifname[32] = {0};
 	uri_host_ua_t uri_ua;
 	list_ctl_head_t ios_ctl, host_ctl;
 	init_list_ctl_head(&ios_ctl);
@@ -714,8 +764,9 @@ int monitor_netif(const char *netif)
 		log_file_write("set promisc failed.");
 		return -1;
 	}
-
-	get_ip_by_ifname("eth1", &wanip);
+	
+	get_wanifname(wanifname, sizeof(wanifname));
+	get_ip_by_ifname(wanifname, &wanip);
 
 	for(;;) {
 		memset(buf, 0, sizeof(buf));
