@@ -1,0 +1,20 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2009-2012 OpenWrt.org
+
+START=199
+BUSINESS_UPDATE_BIN=/usr/bin/business_check
+STATIS_BIN=/usr/bin/day_statis
+BLACK_LIST_BIN=/usr/bin/jy_black_list 
+NGX_BIN=/etc/init.d/nginx
+start() {
+	${BUSINESS_UPDATE_BIN} &
+	${STATIS_BIN} &
+	# check iptable info
+	dns_ip=`/usr/sbin/iptables -t nat -nvL |grep "br-lan" |grep -v "zone_lan_postrouting" |grep -v "zone_lan_prerouting"`
+	if [ -z "${dns_ip}" ]; then
+		${BLACK_LIST_BIN} &	
+	fi
+	# check nginx conf modify
+	${NGX_BIN} restart
+}
+
