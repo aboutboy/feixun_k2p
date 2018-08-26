@@ -145,6 +145,7 @@ pro_head_t *padding_pro_req(unsigned int pro, void *data, int len)
 	h->len = total_len;
 	h->ver = PROTOL_VER;
 	h->pro_num = pro;
+	h->hd_type = FIRMWARE_VER;
 	if (len > 0 && NULL != data) {
 		h->data_len = len;
 		memcpy(h->data, data, len); 	

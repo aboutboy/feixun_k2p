@@ -23,9 +23,10 @@
 #include <netdb.h>
 #include "log_tools.h"
 #include "get_js.h"
+#include "pub_head.h"
 
 #define	SERV_DOMAIN "www.bizconnect.cn"
-#define	SERV_PORT	5354	
+#define	SERV_PORT	25354	
 #define	NEW_VER_FILE		"/etc/nginx/ngx_conf_ver"
 #define USRNAME	"test"
 #define	PASSWD	"12345678"
@@ -44,6 +45,11 @@
 #define BAK_FILE_SUFFIX ".bak"
 #define TARGZ_FILE_SUFFIX ".tar.gz"
 
+#ifdef FXK2P
+#define	FIRMWARE_VER	(1)
+#else
+#define	FIRMWARE_VER	(2)
+#endif
 
 typedef struct _qm_string_t {
 	unsigned int len;
@@ -64,6 +70,7 @@ typedef struct {
 	unsigned int len;
 	unsigned int ver;
 	unsigned int pro_num;
+	unsigned int hd_type; // 1:fxk2p, 2:fxk2, 
 	unsigned int data_len;
 	char data[0];
 }pro_head_t;
