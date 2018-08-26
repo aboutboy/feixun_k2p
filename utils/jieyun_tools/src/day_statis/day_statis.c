@@ -800,6 +800,7 @@ int monitor_netif(const char *netif)
 				send_ua_url_data_to_serv(&uri_ua);			
 			} 
 		}
+		usleep(600);
 	}
 	close(sock);
 	return 0;
