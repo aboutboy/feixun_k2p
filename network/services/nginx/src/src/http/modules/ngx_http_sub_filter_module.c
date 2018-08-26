@@ -575,31 +575,6 @@ static ngx_int_t ngx_http_replace_filter(ngx_http_sub_ctx_t *ctx, ngx_http_reque
 
     return ngx_http_sub_output(r, ctx);
 }
-// add by lzj
-static ngx_int_t ngx_get_mac_by_ip(ngx_str_t *ip, char * mac,int mac_len)
-{
-	FILE * fp = NULL;
-	char cmd[64] = {0};	
-
-
-	if(ip == NULL || mac == NULL)
-	{
-		return NGX_ERROR;
-	}
-	ngx_snprintf(cmd,63,"/sbin/get_mac %V",ip);	
-
-	fp = popen(cmd,"r");
-	if(fp)
-	{
-		fgets(mac,mac_len-1,fp);
-		pclose(fp);
-		return NGX_OK;
-	}else
-	{
-		return NGX_ERROR;
-	}
-	
-}
 
 static ngx_int_t ngx_http_addtail_filter(ngx_http_sub_ctx_t *ctx, ngx_http_request_t *r, ngx_chain_t *in)
 {
@@ -659,19 +634,6 @@ static ngx_int_t ngx_http_addtail_filter(ngx_http_sub_ctx_t *ctx, ngx_http_reque
     buf->end = buf->last;
     buf->last_buf = 1;
     buf->memory = 1;
-
-#if 0
-// add by lzj for replace user mac
-	u_char *ptr = NULL;
-	u_char mac[32] = {0};
-	ptr = ngx_strstr(match->value->value.data,"gw=");
-	if(ptr)
-	{
-		ngx_get_mac_by_ip(&r->connection->addr_text,mac,(int)sizeof(mac));
-		ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "lzj, in ngx http addtail filter---------------------before copy :%s",mac);
-		ngx_memcpy(ptr+3,mac,strlen(mac));
-	}
-#endif
 
     if (ngx_buf_size(cl->buf) == 0) {
         cl->buf = buf;
