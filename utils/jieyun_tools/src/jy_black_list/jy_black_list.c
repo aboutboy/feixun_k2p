@@ -21,11 +21,6 @@ struct ip_str_s {
 	char ip[16];
 };
 
-struct dns_ip_str_s {
-	int sz;
-	struct ip_str_s *ip;
-};
-
 int jy_run_cmd(const char *cmd)
 {
 	FILE *fp;
@@ -80,73 +75,6 @@ int jy_get_ip_by_name(const char *name, struct ip_str_s **ip)
 	}
 
 	return i;
-}
-
-int jy_run_cmd_and_get_result(const char *cmd, char *res, int size)
-{
-	FILE *fp;
-	if (NULL == cmd || NULL == res || 0 == size) {
-		return -1;
-	}
-	fp = popen(cmd, "r");
-	if (NULL == fp) {
-		perror("popen failed");
-		return -1;
-	}
-	memset(res, 0, size);
-	while(!feof(fp)) {
-		fread(res, sizeof(char) , size, fp);
-	}
-	pclose(fp);
-
-	return 0;
-}
-
-int jy_analysis_dig_result(const char *res, char **ip, int *sz)
-{
-#define SEARCH_DNS_STR	"Name:"
-	char *p = NULL, *end = NULL ;
-	char *found_ip = NULL, *tmp;
-	char ip_str[16] = {0};
-	int n = 0, ss;
-	if (NULL == res) {
-		return -1;
-	}
-
-	p = (char *)res;
-	end = p + strlen(res);
-	p = strstr(p, SEARCH_DNS_STR);
-	if (NULL == p) {
-		*sz = 0;
-		return 0;
-	}
-
-	p = strchr(p, '\n');
-	
-	while(p < end) {
-		p++; // ignore '\n'
-		if (p == end) {
-			break;
-		}
-		ss = sscanf(p, "Address %*s %s", ip_str);
-		if (1 == ss) {
-			jy_debug("ip_str:%s\n", ip_str);
-			found_ip = realloc(found_ip,  (++n * sizeof (ip_str)));	
-			if (NULL == found_ip) {
-				perror("calloc failed");
-				break;
-			}
-			tmp = found_ip;
-			tmp += (n - 1) * sizeof ip_str;
-			memcpy(tmp, ip_str, sizeof ip_str);
-			memset(ip_str, 0, sizeof(ip_str));
-		}
-		p = strchr(p, '\n');	
-	}
-	*ip = found_ip;
-	*sz = n;
-
-	return 0;
 }
 
 int main()
