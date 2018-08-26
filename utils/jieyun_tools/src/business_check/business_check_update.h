@@ -21,7 +21,6 @@
 #include <sys/wait.h>
 #include <pthread.h>
 #include <netdb.h>
-#include "log_tools.h"
 #include "get_js.h"
 #include "pub_head.h"
 

@@ -125,70 +125,6 @@ char * url_list_ua2json(list_ctl_head_t *ctl, enum sendflag type)
 	cJSON_Delete(send_json);
 	return s;
 }
-
-struct MemoryStruct {
-  char *memory;
-  size_t size;
-};
-
-static size_t
-WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
-
-  mem->memory = realloc(mem->memory, mem->size + realsize + 1);
-  if(mem->memory == NULL) {
-    /* out of memory! */
-    log_file_write("not enough memory (realloc returned NULL)\n");
-    return 0;
-  }
-
-  memcpy(&(mem->memory[mem->size]), contents, realsize);
-  mem->size += realsize;
-  mem->memory[mem->size] = 0;
-
-  return realsize;
-}
-
-int post_send_jsondata(char *data, const char *addr)
-{
-	CURL *curl;
-	CURLcode res;
-  	struct MemoryStruct chunk;
-	if (NULL == addr) {return 0;}
-      	
-	chunk.memory = malloc(1);  /* will be grown as needed by realloc above */
-  	chunk.size = 0;    /* no data at this point */
-
-	curl_global_init(CURL_GLOBAL_ALL);
-	curl = curl_easy_init();
-	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_POST, 1);
-		curl_easy_setopt(curl, CURLOPT_URL, addr);
-		struct curl_slist *plist = curl_slist_append(NULL,
-				"Content-Type:application/json;charset=UTF-8");
-		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, plist);
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
-		/* send all data to this function  */
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
-
-		 /* we pass our 'chunk' struct to the callback function */
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-
-		res = curl_easy_perform(curl);
-		if (res != CURLE_OK) {
-			log_file_write("curl perform failed:%s", curl_easy_strerror(res));
-		}
-		log_file_write("peer server post response:%s", chunk.memory);
-		curl_slist_free_all(plist);
-		if (chunk.memory) { free(chunk.memory);}
-		curl_easy_cleanup(curl);
-	}
-	curl_global_cleanup();
-	return 0;	
-}
-
 int get_ios_request_data(char *dat, list_ctl_head_t *ctl)
 {
 	cJSON *root, *arr, *item;
@@ -219,19 +155,24 @@ int get_ios_request_data(char *dat, list_ctl_head_t *ctl)
 
 	return 0;
 }
-
-char *replace_cr_to_zero(char *str)
+static size_t
+WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
-	// http line tail is \r\n
-	char *cr;
-	if (NULL == str) return NULL;
-	cr = strchr(str, '\r');
-	if (NULL == cr) return NULL;
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
 
-	*cr = '\0';
-	cr++;
-	if (*cr == '\n') { *cr = '\0'; cr++; }
-	return cr;
+  mem->memory = realloc(mem->memory, mem->size + realsize + 1);
+  if(mem->memory == NULL) {
+    /* out of memory! */
+    log_file_write("not enough memory (realloc returned NULL)\n");
+    return 0;
+  }
+
+  memcpy(&(mem->memory[mem->size]), contents, realsize);
+  mem->size += realsize;
+  mem->memory[mem->size] = 0;
+
+  return realsize;
 }
 
 char *replace_linefeed_to_zero(char *str)
@@ -247,6 +188,7 @@ char *replace_linefeed_to_zero(char *str)
 
 	return n;
 }
+
 
 int get_filter_hostname_data(char *dat, list_ctl_head_t *ctl)
 {
@@ -275,46 +217,100 @@ int get_filter_hostname_data(char *dat, list_ctl_head_t *ctl)
 		}
 		p = cr;
 	}
+	return 0;
+}
+
+
+int curl_post_data(char *data, const char *addr)
+{
+       CURL *curl;
+       CURLcode res;
+       struct MemoryStruct chunk;
+       if (NULL == addr) {return 0;}
+       
+       chunk.memory = malloc(1);  /* will be grown as needed by realloc above */
+       chunk.size = 0;    /* no data at this point */
+
+       curl_global_init(CURL_GLOBAL_ALL);
+       curl = curl_easy_init();
+       if (curl) {
+               curl_easy_setopt(curl, CURLOPT_POST, 1);
+               curl_easy_setopt(curl, CURLOPT_URL, addr);
+               struct curl_slist *plist = curl_slist_append(NULL,
+                               "Content-Type:application/json;charset=UTF-8");
+               curl_easy_setopt(curl, CURLOPT_HTTPHEADER, plist);
+               curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
+               /* send all data to this function  */
+               curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+
+                /* we pass our 'chunk' struct to the callback function */
+               curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+
+               res = curl_easy_perform(curl);
+               if (res != CURLE_OK) {
+                       log_file_write("curl perform failed:%s", curl_easy_strerror(res));
+               }
+               log_file_write("peer server post response:%s", chunk.memory);
+               curl_slist_free_all(plist);
+               if (chunk.memory) { free(chunk.memory);}
+               curl_easy_cleanup(curl);
+       }
+       curl_global_cleanup();
+       return 0;       
 }
 
 int curl_get_request(const char *addr, list_ctl_head_t *ctl, int type /* 1:ios, 2: filter hostname */)
 {
-	CURL *curl;
-	CURLcode res;
-  	struct MemoryStruct chunk;
-	if (NULL == addr) {return 0;}
-	chunk.memory = malloc(1);  /* will be grown as needed by realloc above */
-  	chunk.size = 0;    /* no data at this point */
+       CURL *curl;
+       CURLcode res;
+       struct MemoryStruct chunk;
+       if (NULL == addr) {return 0;}
+       chunk.memory = malloc(1);  /* will be grown as needed by realloc above */
+       chunk.size = 0;    /* no data at this point */
 
-	curl_global_init(CURL_GLOBAL_ALL);
-	curl = curl_easy_init();
-	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, addr);
-		/* send all data to this function  */
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+       curl_global_init(CURL_GLOBAL_ALL);
+       curl = curl_easy_init();
+       if (curl) {
+               curl_easy_setopt(curl, CURLOPT_URL, addr);
+               /* send all data to this function  */
+               curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 
-		 /* we pass our 'chunk' struct to the callback function */
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+                /* we pass our 'chunk' struct to the callback function */
+               curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
 
-		res = curl_easy_perform(curl);
-		if (res != CURLE_OK) {
-			log_file_write("curl perform failed:%s", curl_easy_strerror(res));
-		}
-		log_file_write("peer server get response:%s", chunk.memory);
-		
-		if (1 == type) {
-			get_ios_request_data(chunk.memory, ctl);
-		}
+               res = curl_easy_perform(curl);
+               if (res != CURLE_OK) {
+                       log_file_write("curl perform failed:%s", curl_easy_strerror(res));
+               }
+               log_file_write("peer server get response:%s", chunk.memory);
+               
+               if (1 == type) {
+                       get_ios_request_data(chunk.memory, ctl);
+               }
 
-		if (2 == type) {
-			get_filter_hostname_data(chunk.memory, ctl);
-		}
+               if (2 == type) {
+                       get_filter_hostname_data(chunk.memory, ctl);
+               }
 
-		if (chunk.memory) { free(chunk.memory);}
-		curl_easy_cleanup(curl);
-	}
-	curl_global_cleanup();
-	return 0;	
+               if (chunk.memory) { free(chunk.memory);}
+               curl_easy_cleanup(curl);
+       }
+       curl_global_cleanup();
+       return 0;       
+}
+
+char *replace_cr_to_zero(char *str)
+{
+	// http line tail is \r\n
+	char *cr;
+	if (NULL == str) return NULL;
+	cr = strchr(str, '\r');
+	if (NULL == cr) return NULL;
+
+	*cr = '\0';
+	cr++;
+	if (*cr == '\n') { *cr = '\0'; cr++; }
+	return cr;
 }
 
 int get_wanifname(char *wanifname, int sz)
@@ -332,7 +328,6 @@ int get_wanifname(char *wanifname, int sz)
 int get_mac_by_ifname(const char *ifname, char *mac, int sz, int type /*0: no colon, 1: need colon*/)
 {
 	int ret = -1, sockfd, len;
-	struct sockaddr_in myaddr;
 	struct ifreq ifr;
 
 	if (NULL == ifname || NULL == mac || sz <= 0) return ret;
@@ -414,7 +409,7 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			dat = url_list_ua2json(ctl1, IDMAPPING);
 			//send json
 			if (dat) {
-				post_send_jsondata(dat, POST_ADDR);
+				curl_post_data(dat, POST_ADDR);
 				free(dat);
 			}
 			// not need free uu
@@ -423,7 +418,7 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			// now send
 			dat = ios_url_ua2json(uu);
 			if (dat) {
-				post_send_jsondata(dat, POST_IOS_ADDR);
+				curl_post_data(dat, POST_IOS_ADDR);
 				free(dat);
 			}
 			free(uu);		
@@ -441,20 +436,20 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			if ((MAX_URL_VAL == ctl2->curr) && (now_time <= next_time)) {
 				dat = url_list_ua2json(ctl2, DAY_STATIS);
 				if (dat) {
-					post_send_jsondata(dat, POST_DAYLIVE_ADDR);
+					curl_post_data(dat, POST_DAYLIVE_ADDR);
 					free(dat);
 				}
 
 				char fx_addr[128] = {0};
 				snprintf(fx_addr, sizeof(fx_addr) - 1, POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT, wanmac_colon);
-				post_send_jsondata("50", fx_addr);
+				curl_post_data("50", fx_addr);
 				oneday_send_flag = 1;
 			}
 
 			if ((MAX_URL_VAL > ctl2->curr) && (now_time > next_time)) {
 				dat = url_list_ua2json(ctl2, DAY_STATIS);
 				if (dat) {
-					post_send_jsondata(dat, POST_DAYLIVE_ADDR);
+					curl_post_data(dat, POST_DAYLIVE_ADDR);
 					free(dat);
 				}
 				oneday_send_flag = 1;

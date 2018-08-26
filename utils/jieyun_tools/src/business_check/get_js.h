@@ -6,8 +6,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "md5.h"
-#include "log_tools.h"
-#include "file_ops.h"
 #include "pub_head.h"
 
 #define JS_FILE		"/etc/nginx/ij.js"

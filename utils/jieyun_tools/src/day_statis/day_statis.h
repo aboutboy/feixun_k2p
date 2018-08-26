@@ -4,7 +4,6 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <time.h>
-#include <curl/curl.h>
 #include <netinet/ip.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -16,11 +15,6 @@
 #include <sys/ioctl.h>
 #include <sys/wait.h>
 
-
-#include "list.h"
-#include "cJSON.h"
-#include "log_tools.h"
-#include "file_ops.h"
 #include "pub_head.h"
 
 #define MAX_URL_VAL	(50)
@@ -50,6 +44,20 @@
 typedef unsigned char u8;
 #define MAC_ARG(x) ((u8*)(x))[0],((u8*)(x))[1],((u8*)(x))[2],((u8*)(x))[3],((u8*)(x))[4],((u8*)(x))[5]
 #define ONE_DAY_SECONDS (24*60*60)
+
+struct MemoryStruct {
+  char *memory;
+  size_t size;
+};
+
+typedef struct {
+       struct list_head head;
+       int curr;
+       int max;
+       // mutex
+}list_ctl_head_t;
+
+
 typedef struct {
 	struct list_head list;
 	int sendflag; // 1:idmapping 2:realtime ios 0:statistic everyday
@@ -69,13 +77,6 @@ typedef struct {
 	uint32_t binip;
 	char mac[32];
 } uri_host_ua_t;
-
-typedef struct {
-	struct list_head head;
-	int curr;
-	int max;
-	// mutex
-}list_ctl_head_t;
 
 typedef struct {
 	struct list_head list;
