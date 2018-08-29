@@ -404,7 +404,7 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 	if (sock < 0) return -1;
 	
 	memset(&daylive, 0, sizeof(daylive));
-	get_url_daylive_nr(&daylive);
+
 	time(&now_time);	
 	next_time = now_time + ONE_DAY_SECONDS;
 	for(;;) {
@@ -442,7 +442,6 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			ctl1->curr++;	
 			//json fmt, free uu
 			dat = url_list_ua2json(ctl1, IDMAPPING);
-			//send json
 			if (dat) {
 				curl_post_data(dat, POST_ADDR);
 				free(dat);
@@ -463,17 +462,15 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 		if (uu || new_uu) {
 			time(&now_time);
 			if (oneday_send_flag && (now_time <= next_time)) {
-				if (uu && (0 == uu->sendflag)) free(uu);
-				if (new_uu && (1 == new_uu->sendflag || 2 == new_uu->sendflag)) {
-					free(new_uu);
-				}
+				if (uu) free(uu);
+				if (new_uu) free(new_uu);
 				continue;
 			}
 
-			if (uu && (0 == uu->sendflag)) {
+			if (uu) {
 				list_add_tail(&uu->list, &ctl2->head);	
 			}
-			if (new_uu && (1 == new_uu->sendflag || 2 == new_uu->sendflag)) {
+			if (new_uu) {
 				list_add_tail(&new_uu->list, &ctl2->head);
 			}
 			ctl2->curr++;
