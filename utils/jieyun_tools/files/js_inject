@@ -1,0 +1,5 @@
+config js_inject 'config'
+        option enable 0
+        option statistcal_value 50
+        option filter_hostname feelso.cn,example.com
+

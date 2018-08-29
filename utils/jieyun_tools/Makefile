@@ -44,6 +44,7 @@ define Package/jieyun_tools/install
 	$(INSTALL_DIR) $(1)/usr/bin $(1)/etc/init.d $(1)/etc/config $(1)/sbin $(1)/etc/nginx
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/jy_black_list/jy_black_list $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/jy_black_list.cfg $(1)/etc/config/jy_black_list.cfg
+	$(INSTALL_BIN) ./files/js_inject $(1)/etc/config/js_inject
 	$(INSTALL_BIN) ./files/ngx_conf_ver $(1)/etc/nginx
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/business_check/business_check $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/sync_run.init  $(1)/etc/init.d/sync_run
