@@ -20,6 +20,45 @@ int running_cmd(const char *cmd, char *res, int sz)
 	return 0;
 }
 
+int running_cmd_realloc(const char *cmd, char **res, int *sz)
+{
+        FILE *fp;
+	int count, end_sz = 0;
+	char buf[1024];
+	char *str = NULL;
+        if (NULL == cmd) {
+                return -1;
+        }
+       
+        fp = popen(cmd, "r");
+        if (NULL == fp) {
+                return -1;
+        }
+	
+	while(!feof(fp)) {
+		memset(buf, 0, sizeof(buf));
+        	count = fread(buf, 1, sizeof(buf), fp);
+		if (count > 0) {
+			str = realloc(str, end_sz + count + 1);
+			if (NULL == str) {
+				pclose(fp);
+				return -1;
+			}
+			memcpy(&str[end_sz], buf, count);
+			end_sz += count;
+		}
+	}
+	
+	str[end_sz] = 0;
+	*sz = end_sz;
+	*res = str;
+
+        pclose(fp);
+
+        return 0;
+
+}
+
 off_t get_file_sz(const char *file) 
 {
 	struct stat st;

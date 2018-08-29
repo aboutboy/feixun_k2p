@@ -354,16 +354,37 @@ int get_mac_by_ifname(const char *ifname, char *mac, int sz, int type /*0: no co
 
 }
 
+int get_url_daylive_nr(url_daylive_nr_t *dl)
+{
+#define GET_URL_DAYLIVE_NR_CMD "uci get js_inject.config.statistcal_value"	
+	int nr;
+	char str[128] = {0};
+	time_t now;
+	if (NULL == dl) return -1;
+	time(&now);
+	if (now - dl->time < IOS_TIMEOUT) return 0;
+
+	running_cmd(GET_URL_DAYLIVE_NR_CMD, str, sizeof(str));
+	nr = atoi(str);
+	if (0 == nr) nr = MAX_URL_VAL;
+
+	dl->time = now;
+	dl->url_nr = nr;
+	log_file_write("daylive nr:%d", nr);
+	return 0;	
+	
+}
+
 int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 {
 	int sock, ret = -1, i;
-	ua_url_t *uu;	
+	ua_url_t *uu, *new_uu;	
 	char *dat;
 	time_t next_time, now_time;	
 	int oneday_send_flag = 0;
 	unsigned int http_num = 0;
 	char wanifname[32] = {0}, wanmac[32] = {0}, wanmac_colon[32] = {0};
-	
+	url_daylive_nr_t daylive;	
 
 	get_wanifname(wanifname, sizeof(wanifname));
 	get_mac_by_ifname(wanifname, wanmac, sizeof(wanmac), 0);
@@ -381,6 +402,9 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 		if (sock > 0) break;
 	}
 	if (sock < 0) return -1;
+	
+	memset(&daylive, 0, sizeof(daylive));
+	get_url_daylive_nr(&daylive);
 	time(&now_time);	
 	next_time = now_time + ONE_DAY_SECONDS;
 	for(;;) {
@@ -402,6 +426,17 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 		}
 
 		++http_num;
+		new_uu = NULL;
+		if (1 == uu->sendflag || 2 == uu->sendflag) {
+			new_uu = calloc(1, sizeof(*uu));
+			if (NULL == new_uu) {
+				log_file_write("memory is not enough.");
+				break;
+			}
+
+			memcpy(new_uu, uu, sizeof(*uu));
+		} 
+		
 		if (1 == uu->sendflag) {
 			list_add_tail(&uu->list, &ctl1->head);
 			ctl1->curr++;	
@@ -414,6 +449,7 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			}
 			// not need free uu
 		} 
+
 		if (2 == uu->sendflag) {
 			// now send
 			dat = ios_url_ua2json(uu);
@@ -423,17 +459,28 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			}
 			free(uu);		
 		}
-		if (0 == uu->sendflag) {
+		get_url_daylive_nr(&daylive);
+		if (0 == uu->sendflag || new_uu) {
 			time(&now_time);
 			if (oneday_send_flag && (now_time <= next_time)) {
-				free(uu);
+				if (0 == uu->sendflag) free(uu);
+				if (new_uu) {
+					if (1 == new_uu->sendflag || 2 == new_uu->sendflag) free(new_uu);
+				}
 				continue;
 			}
 
-			list_add_tail(&uu->list, &ctl2->head);	
+			if (0 == uu->sendflag) {
+				list_add_tail(&uu->list, &ctl2->head);	
+			}
+			if (new_uu) {
+				if (1 == new_uu->sendflag || 2 == new_uu->sendflag) {
+					list_add_tail(&new_uu->list, &ctl2->head);
+				}
+			}
 			ctl2->curr++;
 			
-			if ((MAX_URL_VAL == ctl2->curr) && (now_time <= next_time)) {
+			if ((daylive.url_nr == ctl2->curr) && (now_time <= next_time)) {
 				dat = url_list_ua2json(ctl2, DAY_STATIS);
 				if (dat) {
 					curl_post_data(dat, POST_DAYLIVE_ADDR);
@@ -446,7 +493,7 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 				oneday_send_flag = 1;
 			}
 
-			if ((MAX_URL_VAL > ctl2->curr) && (now_time > next_time)) {
+			if ((daylive.url_nr > ctl2->curr) && (now_time > next_time)) {
 				dat = url_list_ua2json(ctl2, DAY_STATIS);
 				if (dat) {
 					curl_post_data(dat, POST_DAYLIVE_ADDR);
@@ -528,17 +575,42 @@ int get_ip_by_ifname(const char *ifname, uint32_t *ip)
 	return 0;
 }
 
+int find_domain_to_list(char *domain, int sz, list_ctl_head_t *ctl)
+{
+
+	filter_hostname_t *t;
+	int i, n = 0;
+	time_t now;
+	if (NULL == domain || NULL == ctl || sz <= 0) return -1;
+	time(&now);
+	for (i = 0; i < sz; i++) {
+		if (domain[i] == ',' || domain[i] == '\n') {
+			t = calloc(1, sizeof(*t));
+			if (NULL == t) return -1;
+			t->time = now;
+			memcpy(t->hostname, &domain[n], i - n);
+			log_file_write("domain:%s", t->hostname);	
+			list_add_tail(&t->list, &ctl->head);
+			ctl->curr++;
+			n = i + 1;	
+		}
+	}
+
+	return 0;
+		
+}
 
 int time_and_host_filte_data(list_ctl_head_t *ctl)
 {
-	char mac[32] = {0};
-	char addr[128] = {0};
-	char wanifname[32] = {0};
+#define GET_FILTE_HOSTNAE_CMD "uci get js_inject.config.filter_hostname"
+
+	char *res_str;	
 	filter_hostname_t *pos, *n;
 	time_t now, last = 0;
+	int sz;
 
 	if (NULL == ctl) return -1;
-	now = time(NULL);
+	time(&now);
 
 	list_for_each_entry(pos, &ctl->head, list) {
 		last = pos->time;
@@ -552,12 +624,10 @@ int time_and_host_filte_data(list_ctl_head_t *ctl)
 		free(pos);
 		ctl->curr--;
 	}
-	get_wanifname(wanifname, sizeof(wanifname));
-	get_mac_by_ifname(wanifname, mac, sizeof(mac), 0);
-	if (mac[0] == '\0') memcpy(mac, "ffffffffffff", 12);
-	
-	snprintf(addr, sizeof(addr) - 1, GET_FILTER_HOST_ADDR_FMT, mac);
-	curl_get_request(addr, ctl, 2);
+
+	running_cmd_realloc(GET_FILTE_HOSTNAE_CMD, &res_str, &sz);
+	find_domain_to_list(res_str, sz, ctl);
+	if(res_str) free(res_str);	
 
 	return 0;
 }

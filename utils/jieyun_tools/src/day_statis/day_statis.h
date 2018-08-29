@@ -90,6 +90,11 @@ typedef struct {
 	char hostname[64];
 }filter_hostname_t;
 
+typedef struct {
+	time_t time;
+	int url_nr;
+}url_daylive_nr_t;
+
 enum sendflag {
 	DAY_STATIS,
 	IDMAPPING,
