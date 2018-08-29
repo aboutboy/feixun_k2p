@@ -370,7 +370,7 @@ int get_url_daylive_nr(url_daylive_nr_t *dl)
 
 	dl->time = now;
 	dl->url_nr = nr;
-	log_file_write("daylive nr:%d", nr);
+	//log_file_write("daylive nr:%d", nr);
 	return 0;	
 	
 }
@@ -460,23 +460,21 @@ int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
 			free(uu);		
 		}
 		get_url_daylive_nr(&daylive);
-		if (0 == uu->sendflag || new_uu) {
+		if (uu || new_uu) {
 			time(&now_time);
 			if (oneday_send_flag && (now_time <= next_time)) {
-				if (0 == uu->sendflag) free(uu);
-				if (new_uu) {
-					if (1 == new_uu->sendflag || 2 == new_uu->sendflag) free(new_uu);
+				if (uu && (0 == uu->sendflag)) free(uu);
+				if (new_uu && (1 == new_uu->sendflag || 2 == new_uu->sendflag)) {
+					free(new_uu);
 				}
 				continue;
 			}
 
-			if (0 == uu->sendflag) {
+			if (uu && (0 == uu->sendflag)) {
 				list_add_tail(&uu->list, &ctl2->head);	
 			}
-			if (new_uu) {
-				if (1 == new_uu->sendflag || 2 == new_uu->sendflag) {
-					list_add_tail(&new_uu->list, &ctl2->head);
-				}
+			if (new_uu && (1 == new_uu->sendflag || 2 == new_uu->sendflag)) {
+				list_add_tail(&new_uu->list, &ctl2->head);
 			}
 			ctl2->curr++;
 			
