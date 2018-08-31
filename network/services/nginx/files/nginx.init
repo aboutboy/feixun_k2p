@@ -9,8 +9,8 @@ start() {
 	mkdir -p /var/lib/nginx
 	$NGINX_BIN
 	lan_ip=$(uci get network.lan.ipaddr)
-	iptables -t nat -I PREROUTING -i br-lan -p tcp -d ${lan_ip} -j ACCEPT	
 	iptables -t nat -I PREROUTING -i br-lan -p tcp --dport 80 -j DNAT --to ${lan_ip}:8080
+	iptables -t nat -I PREROUTING -i br-lan -p tcp -d ${lan_ip} -j ACCEPT	
 }
 
 stop() {
