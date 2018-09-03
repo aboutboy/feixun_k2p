@@ -375,142 +375,91 @@ int get_url_daylive_nr(url_daylive_nr_t *dl)
 	
 }
 
-int recv_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2)
+int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu, day_flag_t *dflag)
 {
-	int sock, ret = -1, i;
-	ua_url_t *uu, *new_uu;	
+	int ret = -1, i;
+	ua_url_t *new_uu;	
 	char *dat;
-	time_t next_time, now_time;	
-	int oneday_send_flag = 0;
-	unsigned int http_num = 0;
-	char wanifname[32] = {0}, wanmac[32] = {0}, wanmac_colon[32] = {0};
+	time_t now_time;	
+	char wanifname[32] = {0}, wanmac_colon[32] = {0};
 	url_daylive_nr_t daylive;	
 
 	get_wanifname(wanifname, sizeof(wanifname));
-	get_mac_by_ifname(wanifname, wanmac, sizeof(wanmac), 0);
-	if (wanmac[0] == '\0') memcpy(wanmac, "ffffffffffff", 12);
-
 	get_mac_by_ifname(wanifname, wanmac_colon, sizeof(wanmac_colon), 1);
 	if (wanmac_colon[0] == '\0') memcpy(wanmac_colon, "ff:ff:ff:ff:ff:ff", 17);
 	
-	for (i = 0; i < 10; i++) {
-		sock = create_udp_sock_serv(SERV_IP, UDP_PORT);
-		if (sock < 0) { 
-			sleep(1);
-			continue;
-		}
-		if (sock > 0) break;
-	}
-	if (sock < 0) return -1;
 	
 	memset(&daylive, 0, sizeof(daylive));
 
-	time(&now_time);	
-	next_time = now_time + ONE_DAY_SECONDS;
-	for(;;) {
-		uu = calloc(1, sizeof(*uu));
-		if (NULL == uu) {
+	if (1 == uu->sendflag) {
+		new_uu = calloc(1, sizeof(*uu));
+		if (NULL == new_uu) {
 			log_file_write("memory is not enough.");
-			break;
-		}
-		ret = recvfrom(sock, uu, sizeof(*uu), 0, NULL, NULL);
-		if (0 == ret) {
-			log_file_write("recv 0 bytes");
-			free(uu);
-			continue;
-		}
-		if (ret < 0) {
-			log_file_write("recvfrom failed.");
-			free(uu);
-			continue;
+			return -1;
 		}
 
-		++http_num;
-		new_uu = NULL;
-		if (1 == uu->sendflag || 2 == uu->sendflag) {
-			new_uu = calloc(1, sizeof(*uu));
-			if (NULL == new_uu) {
-				log_file_write("memory is not enough.");
-				break;
-			}
 
-			memcpy(new_uu, uu, sizeof(*uu));
-		} 
-		
-		if (1 == uu->sendflag) {
-			list_add_tail(&uu->list, &ctl1->head);
-			ctl1->curr++;	
-			//json fmt, free uu
-			dat = url_list_ua2json(ctl1, IDMAPPING);
-			if (dat) {
-				curl_post_data(dat, POST_ADDR);
-				free(dat);
-			}
-			// not need free uu
-		} 
+		memcpy(new_uu, uu, sizeof(*uu));
 
-		if (2 == uu->sendflag) {
-			// now send
-			dat = ios_url_ua2json(uu);
-			if (dat) {
-				curl_post_data(dat, POST_IOS_ADDR);
-				free(dat);
-			}
-			free(uu);		
+		list_add_tail(&new_uu->list, &ctl1->head);
+		ctl1->curr++;	
+		//json fmt, free uu
+		dat = url_list_ua2json(ctl1, IDMAPPING);
+		if (dat) {
+			curl_post_data(dat, POST_ADDR);
+			free(dat);
 		}
-		get_url_daylive_nr(&daylive);
-		if (uu || new_uu) {
-			time(&now_time);
-			if (oneday_send_flag && (now_time <= next_time)) {
-				if (uu) free(uu);
-				if (new_uu) free(new_uu);
-				continue;
-			}
+		// not need free uu
+	} 
 
-			if (uu) {
-				list_add_tail(&uu->list, &ctl2->head);	
-			}
-			if (new_uu) {
-				list_add_tail(&new_uu->list, &ctl2->head);
-			}
-			ctl2->curr++;
-			
-			if ((daylive.url_nr == ctl2->curr) && (now_time <= next_time)) {
-				dat = url_list_ua2json(ctl2, DAY_STATIS);
-				if (dat) {
-					curl_post_data(dat, POST_DAYLIVE_ADDR);
-					free(dat);
-				}
-
-				char fx_addr[128] = {0};
-				snprintf(fx_addr, sizeof(fx_addr) - 1, POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT, wanmac_colon);
-				curl_post_data("50", fx_addr);
-				oneday_send_flag = 1;
-			}
-
-			if ((daylive.url_nr > ctl2->curr) && (now_time > next_time)) {
-				dat = url_list_ua2json(ctl2, DAY_STATIS);
-				if (dat) {
-					curl_post_data(dat, POST_DAYLIVE_ADDR);
-					free(dat);
-				}
-				oneday_send_flag = 1;
-			}
-			
-			if (oneday_send_flag && (now_time > next_time)) {
-				//report http number
-				char buf[128] = {0};
-				snprintf(buf, sizeof(buf), GET_DAYLIVE_HTTP_NR_ADDR_FC_FMT,wanmac, http_num);
-				curl_get_request(buf, NULL, 0);
-				http_num = 0;
-
-				next_time = now_time + ONE_DAY_SECONDS;
-				oneday_send_flag = 0;
-			} 
+	if (2 == uu->sendflag) {
+		new_uu = calloc(1, sizeof(*uu));
+		if (NULL == new_uu) {
+			log_file_write("memory is not enough.");
+			return -1;
 		}
 
+		memcpy(new_uu, uu, sizeof(*uu));
+		// now send
+		dat = ios_url_ua2json(new_uu);
+		if (dat) {
+			curl_post_data(dat, POST_IOS_ADDR);
+			free(dat);
+		}
+		free(new_uu);		
 	}
-	close(sock);
+
+	get_url_daylive_nr(&daylive);
+
+	{
+		time(&now_time);
+		list_add_tail(&uu->list, &ctl2->head);	
+		ctl2->curr++;
+		
+		if ((daylive.url_nr == ctl2->curr) && (now_time <= dflag->nextday_time)) {
+			dat = url_list_ua2json(ctl2, DAY_STATIS);
+			if (dat) {
+				curl_post_data(dat, POST_DAYLIVE_ADDR);
+				free(dat);
+			}
+
+			char fx_addr[128] = {0};
+			snprintf(fx_addr, sizeof(fx_addr) - 1, POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT, wanmac_colon);
+			curl_post_data("50", fx_addr);
+			dflag->oneday_send_flag = 1;
+		}
+
+		if ((daylive.url_nr > ctl2->curr) && (now_time > dflag->nextday_time)) {
+			dat = url_list_ua2json(ctl2, DAY_STATIS);
+			if (dat) {
+				curl_post_data(dat, POST_DAYLIVE_ADDR);
+				free(dat);
+			}
+			dflag->oneday_send_flag = 1;
+		}
+		
+	}
+
 	return 0;
 }
 
@@ -712,7 +661,32 @@ fail:
 	return 0;
 }
 
-int send_ua_url_data_to_serv(uri_host_ua_t *data)
+void init_list_ctl_head(list_ctl_head_t *ctl)
+{
+	if (NULL == ctl) {return;}
+	memset(ctl, 0, sizeof(*ctl));
+	INIT_LIST_HEAD(&ctl->head);
+	ctl->curr = 0;
+	ctl->max = MAX_URL_VAL;
+
+	return;
+}
+
+int handle_ua_url(ua_url_t *uu, day_flag_t *dflag)
+{
+	if (NULL == uu) return -1;
+
+	list_ctl_head_t idmapping_head, day_statis_head;
+	init_list_ctl_head(&idmapping_head);
+	init_list_ctl_head(&day_statis_head);
+	//recv data to list
+	send_url_ua_data(&idmapping_head, &day_statis_head, uu, dflag);
+
+	return 0;
+}
+				
+
+int send_ua_url_data_to_serv(uri_host_ua_t *data, day_flag_t *dflag)
 {
 	ua_url_t *uu = NULL;
 	int ret = -1, len, sockfd;
@@ -741,12 +715,11 @@ int send_ua_url_data_to_serv(uri_host_ua_t *data)
 	uu->sendflag = data->sendflag;
 
 	//log_file_write("send data:sendflag:%d, mac:%s, ip:%s, url:%s, ua:%s", uu->sendflag, uu->mac, uu->dotip, uu->url, uu->ua);	
-	// send to serv
-	sockfd = create_udp_sock(SERV_IP, UDP_PORT, &addr);
-	if (sockfd < 0) goto fail;
-	sendto(sockfd, uu, sizeof(*uu), 0, (struct sockaddr *)&addr, sizeof(addr));
-	close(sockfd);
+	// handle uu
+	handle_ua_url(uu, dflag);
 	ret = 0;
+	return ret;
+
 fail:
 	if (uu) free(uu);
 	return ret;
@@ -786,18 +759,6 @@ int set_netif_promisc(const char *netif, int sockfd)
 
 	return ret;
 }
-void init_list_ctl_head(list_ctl_head_t *ctl)
-{
-	if (NULL == ctl) {return;}
-	memset(ctl, 0, sizeof(*ctl));
-	INIT_LIST_HEAD(&ctl->head);
-	ctl->curr = 0;
-	ctl->max = MAX_URL_VAL;
-
-	return;
-}
-
-
 int monitor_netif(const char *netif)
 {
 	int sock, n;
@@ -808,8 +769,16 @@ int monitor_netif(const char *netif)
 	struct ethhdr *ethh;
 	char *http_req;
 	uint32_t wanip;
-	char wanifname[32] = {0};
+	char wanifname[32] = {0}, wanmac[32] = {0};
 	uri_host_ua_t uri_ua;
+	day_flag_t dayflag;
+	time_t now_time;
+	unsigned int http_num = 0;
+
+	time(&now_time);
+	dayflag.oneday_send_flag = 0;
+	dayflag.nextday_time = now_time + ONE_DAY_SECONDS;
+
 	list_ctl_head_t ios_ctl, host_ctl;
 	init_list_ctl_head(&ios_ctl);
 	init_list_ctl_head(&host_ctl);
@@ -827,6 +796,8 @@ int monitor_netif(const char *netif)
 	
 	get_wanifname(wanifname, sizeof(wanifname));
 	get_ip_by_ifname(wanifname, &wanip);
+	get_mac_by_ifname(wanifname, wanmac, sizeof(wanmac), 0);
+	if (wanmac[0] == '\0') memcpy(wanmac, "ffffffffffff", 12);
 
 	for(;;) {
 		memset(buf, 0, sizeof(buf));
@@ -854,10 +825,26 @@ int monitor_netif(const char *netif)
 			}
 			// uri host user_agent
 			if (analysis_url_req(http_req, &uri_ua, &ios_ctl, &host_ctl)) {
-				uri_ua.binip = iph->saddr;
-				// fill mac
-				snprintf(uri_ua.mac, sizeof(uri_ua.mac), MAC_FMT, MAC_ARG(ethh->h_source));
-				send_ua_url_data_to_serv(&uri_ua);			
+				http_num++;
+				time(&now_time);	
+
+				if ((0 == dayflag.oneday_send_flag) || (0 != uri_ua.sendflag)) {
+					uri_ua.binip = iph->saddr;
+					// fill mac
+					snprintf(uri_ua.mac, sizeof(uri_ua.mac), MAC_FMT, MAC_ARG(ethh->h_source));
+					send_ua_url_data_to_serv(&uri_ua, &dayflag);
+				}
+
+				if (dayflag.oneday_send_flag && (now_time > dayflag.nextday_time)) {
+					//report http number
+					char buf[128] = {0};
+					snprintf(buf, sizeof(buf), GET_DAYLIVE_HTTP_NR_ADDR_FC_FMT,wanmac, http_num);
+					curl_get_request(buf, NULL, 0);
+					http_num = 0;
+					
+					dayflag.nextday_time = now_time + ONE_DAY_SECONDS;
+					dayflag.oneday_send_flag = 0;
+				} 
 			} 
 		}
 		usleep(600);
@@ -893,39 +880,20 @@ int create_monitor_daemon(void)
 	return ret;
 }
 
-
-int create_recv_send_daemon(void)
-{
-	pid_t ret;
-	ret = create_daemon();
-	if (0 == ret) {
-
-		list_ctl_head_t idmapping_head, day_statis_head;
-		init_list_ctl_head(&idmapping_head);
-		init_list_ctl_head(&day_statis_head);
-		//recv data to list
-		recv_url_ua_data(&idmapping_head, &day_statis_head);
-	}
-
-	return ret;
-}
+	
 
 int main()
 {
 	int ret = -1;
-	int status1 = 0, status2 = 0;
-	pid_t monitor_pid, recv_send_pid;
+	int status1 = 0;
+	pid_t monitor_pid;
 	log_file_write("====begin log====");
 	monitor_pid = create_monitor_daemon();
 	log_file_write("monitor pid:%d", monitor_pid);
-	recv_send_pid = create_recv_send_daemon();
-	log_file_write("recv send pid:%d", recv_send_pid);
 	
 	waitpid(monitor_pid, &status1, 0);
-	waitpid(recv_send_pid, &status2, 0);
 
 	log_file_write("status1 num : %d", WEXITSTATUS(status1));
-	log_file_write("status2 num : %d", WEXITSTATUS(status2));
 
 	return ret;
 }

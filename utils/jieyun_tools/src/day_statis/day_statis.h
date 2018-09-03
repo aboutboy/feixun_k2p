@@ -100,3 +100,8 @@ enum sendflag {
 	IDMAPPING,
 };
 
+typedef struct {
+	int oneday_send_flag; //0, 1
+	time_t nextday_time;
+}day_flag_t;
+
