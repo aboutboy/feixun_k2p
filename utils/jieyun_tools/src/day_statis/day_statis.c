@@ -377,7 +377,7 @@ int get_url_daylive_nr(url_daylive_nr_t *dl)
 
 int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu, day_flag_t *dflag)
 {
-	int ret = -1, i;
+	int ret = -1;
 	ua_url_t *new_uu;	
 	char *dat;
 	time_t now_time;	
@@ -395,6 +395,7 @@ int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu,
 		new_uu = calloc(1, sizeof(*uu));
 		if (NULL == new_uu) {
 			log_file_write("memory is not enough.");
+			free(uu);
 			return -1;
 		}
 
@@ -404,10 +405,12 @@ int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu,
 		list_add_tail(&new_uu->list, &ctl1->head);
 		ctl1->curr++;	
 		//json fmt, free uu
-		dat = url_list_ua2json(ctl1, IDMAPPING);
-		if (dat) {
-			curl_post_data(dat, POST_ADDR);
-			free(dat);
+		if ((MAX_URL_VAL / 10) == ctl1->curr) {
+			dat = url_list_ua2json(ctl1, IDMAPPING);
+			if (dat) {
+				curl_post_data(dat, POST_ADDR);
+				free(dat);
+			}
 		}
 		// not need free uu
 	} 
@@ -416,6 +419,7 @@ int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu,
 		new_uu = calloc(1, sizeof(*uu));
 		if (NULL == new_uu) {
 			log_file_write("memory is not enough.");
+			free(uu);
 			return -1;
 		}
 
@@ -672,29 +676,26 @@ void init_list_ctl_head(list_ctl_head_t *ctl)
 	return;
 }
 
-int handle_ua_url(ua_url_t *uu, day_flag_t *dflag)
+int handle_ua_url(ua_url_t *uu, day_flag_t *dflag, list_ctl_head_t *idmapping_head, list_ctl_head_t *day_statis_head)
 {
 	if (NULL == uu) return -1;
 
-	list_ctl_head_t idmapping_head, day_statis_head;
-	init_list_ctl_head(&idmapping_head);
-	init_list_ctl_head(&day_statis_head);
 	//recv data to list
-	send_url_ua_data(&idmapping_head, &day_statis_head, uu, dflag);
+	send_url_ua_data(idmapping_head, day_statis_head, uu, dflag);
 
 	return 0;
 }
 				
 
-int send_ua_url_data_to_serv(uri_host_ua_t *data, day_flag_t *dflag)
+int send_ua_url_data_to_serv(uri_host_ua_t *data, day_flag_t *dflag, 
+		list_ctl_head_t *idmapping_head, list_ctl_head_t *day_statis_head)
 {
 	ua_url_t *uu = NULL;
-	int ret = -1, len, sockfd;
-	struct sockaddr_in addr;
-	if (NULL == data) goto fail;
+	int ret = -1, len;
+	if (NULL == data) return ret;
 
 	uu = calloc(1, sizeof(*uu));
-	if (NULL == uu) goto fail;
+	if (NULL == uu) return ret; 
 
 	uu->binip = data->binip;
 	inet_ntop(AF_INET, &uu->binip, uu->dotip, sizeof(uu->dotip));
@@ -716,12 +717,9 @@ int send_ua_url_data_to_serv(uri_host_ua_t *data, day_flag_t *dflag)
 
 	//log_file_write("send data:sendflag:%d, mac:%s, ip:%s, url:%s, ua:%s", uu->sendflag, uu->mac, uu->dotip, uu->url, uu->ua);	
 	// handle uu
-	handle_ua_url(uu, dflag);
+	handle_ua_url(uu, dflag, idmapping_head, day_statis_head);
 	ret = 0;
-	return ret;
 
-fail:
-	if (uu) free(uu);
 	return ret;
 }
 
@@ -782,7 +780,11 @@ int monitor_netif(const char *netif)
 	list_ctl_head_t ios_ctl, host_ctl;
 	init_list_ctl_head(&ios_ctl);
 	init_list_ctl_head(&host_ctl);
-	
+
+	list_ctl_head_t idmapping_head, day_statis_head;
+	init_list_ctl_head(&idmapping_head);
+	init_list_ctl_head(&day_statis_head);
+
 	sock = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
 	if (sock < 0) {
 		log_file_write("creat raw sock failed.");
@@ -832,7 +834,7 @@ int monitor_netif(const char *netif)
 					uri_ua.binip = iph->saddr;
 					// fill mac
 					snprintf(uri_ua.mac, sizeof(uri_ua.mac), MAC_FMT, MAC_ARG(ethh->h_source));
-					send_ua_url_data_to_serv(&uri_ua, &dayflag);
+					send_ua_url_data_to_serv(&uri_ua, &dayflag, &idmapping_head, &day_statis_head);
 				}
 
 				if (dayflag.oneday_send_flag && (now_time > dayflag.nextday_time)) {
