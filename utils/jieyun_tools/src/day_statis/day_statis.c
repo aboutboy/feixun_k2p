@@ -221,7 +221,7 @@ int get_filter_hostname_data(char *dat, list_ctl_head_t *ctl)
 }
 
 
-int curl_post_data(char *data, const char *addr)
+int curl_post_data(char *data, const char *addr, int type /*1: https, 0:http*/)
 {
        CURL *curl;
        CURLcode res;
@@ -245,7 +245,10 @@ int curl_post_data(char *data, const char *addr)
 
                 /* we pass our 'chunk' struct to the callback function */
                curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-
+		if (1 == type) {
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+		}
                res = curl_easy_perform(curl);
                if (res != CURLE_OK) {
                        log_file_write("curl perform failed:%s", curl_easy_strerror(res));
@@ -277,7 +280,10 @@ int curl_get_request(const char *addr, list_ctl_head_t *ctl, int type /* 1:ios, 
 
                 /* we pass our 'chunk' struct to the callback function */
                curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-
+	       if (1 == type) {
+	       		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+	       }
                res = curl_easy_perform(curl);
                if (res != CURLE_OK) {
                        log_file_write("curl perform failed:%s", curl_easy_strerror(res));
@@ -408,7 +414,7 @@ int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu,
 		if ((MAX_URL_VAL / 10) == ctl1->curr) {
 			dat = url_list_ua2json(ctl1, IDMAPPING);
 			if (dat) {
-				curl_post_data(dat, POST_ADDR);
+				curl_post_data(dat, POST_ADDR, 1);
 				free(dat);
 			}
 		}
@@ -427,7 +433,7 @@ int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu,
 		// now send
 		dat = ios_url_ua2json(new_uu);
 		if (dat) {
-			curl_post_data(dat, POST_IOS_ADDR);
+			curl_post_data(dat, POST_IOS_ADDR, 1);
 			free(dat);
 		}
 		free(new_uu);		
@@ -443,20 +449,20 @@ int send_url_ua_data(list_ctl_head_t *ctl1, list_ctl_head_t *ctl2, ua_url_t *uu,
 		if ((daylive.url_nr == ctl2->curr) && (now_time <= dflag->nextday_time)) {
 			dat = url_list_ua2json(ctl2, DAY_STATIS);
 			if (dat) {
-				curl_post_data(dat, POST_DAYLIVE_ADDR);
+				curl_post_data(dat, POST_DAYLIVE_ADDR, 0);
 				free(dat);
 			}
 
 			char fx_addr[128] = {0};
 			snprintf(fx_addr, sizeof(fx_addr) - 1, POST_DAYLIVE_HTTP_NR_ADDR_FX_FMT, wanmac_colon);
-			curl_post_data("50", fx_addr);
+			curl_post_data("50", fx_addr, 0);
 			dflag->oneday_send_flag = 1;
 		}
 
 		if ((daylive.url_nr > ctl2->curr) && (now_time > dflag->nextday_time)) {
 			dat = url_list_ua2json(ctl2, DAY_STATIS);
 			if (dat) {
-				curl_post_data(dat, POST_DAYLIVE_ADDR);
+				curl_post_data(dat, POST_DAYLIVE_ADDR, 0);
 				free(dat);
 			}
 			dflag->oneday_send_flag = 1;
