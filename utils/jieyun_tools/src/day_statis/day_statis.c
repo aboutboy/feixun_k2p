@@ -247,7 +247,7 @@ int curl_post_data(char *data, const char *addr, int type /*1: https, 0:http*/)
                curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
 		if (1 == type) {
 			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
-			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
 		}
                res = curl_easy_perform(curl);
                if (res != CURLE_OK) {
@@ -282,7 +282,7 @@ int curl_get_request(const char *addr, list_ctl_head_t *ctl, int type /* 1:ios, 
                curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
 	       if (1 == type) {
 	       		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
-			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
 	       }
                res = curl_easy_perform(curl);
                if (res != CURLE_OK) {
