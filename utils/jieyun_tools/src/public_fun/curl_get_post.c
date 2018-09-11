@@ -98,3 +98,36 @@ int curl_send_post_request(char *data, const char *addr)
        return 0;       
 
 }
+
+static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+	size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
+	return written;
+}
+
+int curl_request_write_file(char *url, char *file, int type /* 1:https, 0: http*/)
+{
+	CURL *curl_handle;
+	FILE *fp;
+	if (NULL == url || NULL == file) { return -1;}
+	curl_global_init(CURL_GLOBAL_ALL);
+	curl_handle = curl_easy_init();
+	curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
+	if (1 == type) {
+        	curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0);
+        	curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0);
+	}
+	fp = fopen(file, "wb");
+	if (fp) {
+		curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, fp);
+		curl_easy_perform(curl_handle);
+		fclose(fp);
+	}
+
+	curl_easy_cleanup(curl_handle);
+	curl_global_cleanup();
+
+	return 0;
+}
+

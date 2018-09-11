@@ -4,3 +4,4 @@
 #include "log_tools.h"
 
 
+int curl_request_write_file(char *url, char *file, int type);

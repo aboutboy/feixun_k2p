@@ -1,19 +1,19 @@
-EXE:=jy_black_list
-CC:=gcc
-#EXTRA_CFLAGS += -O2 -Wall -g $(CFLAGS)
-EXTRA_CFLAGS += -Wall -g
+SRCS = $(wildcard *.c ../public_fun/*.c)
+OBJS = $(SRCS:.c = .o)
+CC = gcc
+INCLUDE = -I. -I../public_fun
+LIBS = -lcurl -lpthread -L.
+CCFLAGS = -g -Wall
+EXE = jy_black_list
 
+all : $(EXE)
 
-OBJS = jy_black_list.o
+$(EXE) : $(OBJS)
+	$(CC) $^ -o $@ $(INCLUDE) $(LIBS)
+%.o : %.c
+	$(CC) -c $< $(CCFLAGS)
 
-all: $(EXE) 
+clean :
+	rm -rf *.out *.o $(EXE)
 
-$(EXE): $(OBJS)
-	$(CC)  $(EXTRA_CFLAGS) -o $@ $(OBJS)
-
-clean:
-	-@rm -f *~ *.o $(EXE) *.d
-
-$(OBJS): %.o : %.c
-	$(CC) $(EXTRA_CFLAGS) -c $< -o $@
-
+.PHONY : clean
