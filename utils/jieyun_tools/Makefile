@@ -32,8 +32,8 @@ define Build/Prepare
 endef
 
 define Build/Compile
-	$(TARGET_CC) $(TARGET_CFLAGS) -Wall \
-		-o $(PKG_BUILD_DIR)/jy_black_list/jy_black_list $(PKG_BUILD_DIR)/jy_black_list/jy_black_list.c
+	$(TARGET_CC) $(TARGET_CFLAGS_NEW) -Wall \
+		-o $(PKG_BUILD_DIR)/jy_black_list/jy_black_list $(PKG_BUILD_DIR)/jy_black_list/jy_black_list.c ${PKG_BUILD_DIR}/public_fun/*.c -lcurl
 	$(TARGET_CC) $(TARGET_CFLAGS_NEW) -Wall \
 		-o $(PKG_BUILD_DIR)/business_check/business_check $(PKG_BUILD_DIR)/business_check/*.c ${PKG_BUILD_DIR}/public_fun/*.c -lcurl
 	$(TARGET_CC) $(TARGET_CFLAGS_NEW) -Wall \
