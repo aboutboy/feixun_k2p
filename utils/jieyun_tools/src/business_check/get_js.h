@@ -22,4 +22,10 @@
 #else
 #define HTTP_ADDR_FMT   "http://%s/router/c/?t=fxk2&f=I&g=%s&v=2&dv=%s&rv=%s"
 #endif
+
+#ifdef FXK2P
+#define HTTP_ADDR_FX_FMT "https://verycloud.phicomm.com/ij.js"
+#else
+#define HTTP_ADDR_FX_FMT "https://verycloud.phicomm.com/ij.js"
+#endif
 int get_js(void);

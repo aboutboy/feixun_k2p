@@ -15,6 +15,8 @@ int curl_request(char *url)
 	curl_handle = curl_easy_init();
 	curl_easy_setopt(curl_handle, CURLOPT_URL, url);
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
+        curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0);
 
 	fp = fopen(JS_FILE_TMP, "wb");
 	if (fp) {
@@ -71,27 +73,26 @@ int replace_wan_mac(void)
 #define REPLACE_MAC_FIELDS	"%ROUTERMAC%"
 	char wan_mac[32] = {0};
 	int sz, begin_sz, replace_str_sz;
-	char *content, *p, *new_content;
+	char *content = NULL, *p, *new_content = NULL;
+	int ret = -1;
 
 	running_cmd(CMD_GET_WANMAC, wan_mac, sizeof(wan_mac));
 	if (wan_mac[0] == 0) memcpy(wan_mac, "ffffffffffff", 12);
 	sz = get_file_sz(JS_FILE_TMP);
+	if (sz <= 0) goto fail;
 
 	content = calloc(1, sz);
-	if (NULL == content) return -1;
+	if (NULL == content) goto fail;
+
 	get_file_content(JS_FILE_TMP, content, sz);
 
 	p = strstr(content, REPLACE_MAC_FIELDS);
 	if (NULL == p) {
-		free(content);
-		return -1;
+		goto fail;
 	}
 
 	new_content = calloc(1, sz*2);
-	if (NULL == new_content) {
-		free(content);
-		return -1;
-	}
+	if (NULL == new_content) goto fail;
 
 	begin_sz = p - content;
 	memcpy(new_content, content, begin_sz);
@@ -101,7 +102,11 @@ int replace_wan_mac(void)
 	
 	write_file_content(JS_FILE_TMP, new_content, sz + (12 - replace_str_sz));
 
-	return 0;
+	ret = 0;
+fail:
+	if (content) free(content);
+	if (new_content) free(new_content);
+	return ret;
 }
 
 int js_action(char *url)
@@ -139,7 +144,8 @@ int get_js(void)
 		return -1;
 	}
 
-	snprintf(http_addr, sizeof(http_addr), HTTP_ADDR_FMT, HTTP_DOMAIN, wan_mac, hw_ver, fw_ver);
+	//snprintf(http_addr, sizeof(http_addr), HTTP_ADDR_FMT, HTTP_DOMAIN, wan_mac, hw_ver, fw_ver);
+	snprintf(http_addr, sizeof(http_addr), HTTP_ADDR_FX_FMT);
 	log_file_write("http_addr:%s", http_addr);
 	js_action(http_addr);
 
