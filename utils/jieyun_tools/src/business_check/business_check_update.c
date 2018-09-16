@@ -488,6 +488,11 @@ int main()
 {
 	int ret = 0;
 	while(1) {
+		ret = check_inet_switch();
+		if (0 == ret) {
+			sleep(7);
+			continue;
+		}
 		ret = check_update_and_download_perform();
 		if (ret < 0) {
 			log_file_write("check_update failed.");

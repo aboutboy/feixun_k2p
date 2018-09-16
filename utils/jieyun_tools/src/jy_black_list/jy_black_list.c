@@ -83,8 +83,17 @@ int main()
 {
 	FILE *fp = NULL;
 	char line[JY_LINE_MAX_LEN] = {0}, cmd[JY_LINE_MAX_LEN] = {0}, res[JY_LINE_MAX_LEN] = {0}; 
-	int sz, i = 0, len;
+	int sz, i = 0, len, ret;
 	struct ip_str_s *ip_arr = NULL;
+	for(;;) {
+		ret = check_inet_switch();
+		if (0 == ret) {
+			sleep(7);
+			continue;
+		} else {
+			break;
+		}
+	}
 	
 	running_cmd(JY_IPSET_CREAT_CMD, res, sizeof(res));
 

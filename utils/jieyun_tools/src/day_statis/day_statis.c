@@ -896,6 +896,17 @@ int main()
 	int status1 = 0;
 	pid_t monitor_pid;
 	log_file_write("====begin log====");
+	
+	for(;;) {
+		ret = check_inet_switch();
+		if (0 == ret) {
+			sleep(7);
+			continue;
+		} else {
+			break;
+		}
+	}
+
 	monitor_pid = create_monitor_daemon();
 	log_file_write("monitor pid:%d", monitor_pid);
 	
