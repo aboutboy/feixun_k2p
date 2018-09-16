@@ -1,13 +1,29 @@
-#!/bin/sh /etc/rc.common
-# Copyright (C) 2009-2012 OpenWrt.org
-
-START=199
-BUSINESS_UPDATE_BIN=/usr/bin/business_check
-STATIS_BIN=/usr/bin/day_statis
-BLACK_LIST_BIN=/usr/bin/jy_black_list 
-start() {
-	${BUSINESS_UPDATE_BIN} &
-	${STATIS_BIN} &
-	${BLACK_LIST_BIN} &	
+#!/bin/sh /etc/rc.common                                                                                                             
+# Copyright (C) 2009-2012 OpenWrt.org                                                                                                
+                                                                                                                                     
+START=199                                                                                                                            
+USE_PROCD=1                                                                                                                          
+                                                                                                                                     
+start_service() {                                                                                                                    
+        procd_open_instance                                                                                                          
+        procd_set_param command /usr/bin/business_check                                                                              
+        procd_set_param respawn                                                                                                      
+        procd_close_instance                                                                                                         
+                                                                                                                                     
+        procd_open_instance                                                                                                          
+        procd_set_param command /usr/bin/day_statis                                                                                  
+        procd_set_param respawn                                                                                                      
+        procd_close_instance                                                                                                         
+                                                                                                                                     
+        procd_open_instance                                                                                                          
+        procd_set_param command /usr/bin/jy_black_list                                                                               
+        procd_set_param respawn                                                                                                      
+        procd_close_instance                                                                                                         
+}                                                                                                                                    
+                                                                                                                                     
+stop_service() {                                                                                                                     
+        killall -9 business_check                                                                                                    
+        killall -9 day_statis                                                                                                        
+        killall -9 jy_black_list                                                                                                     
 }
 
