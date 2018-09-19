@@ -1,7 +1,6 @@
 #!/bin/sh /etc/rc.common
 # Copyright (C) 2009-2012 OpenWrt.org
 
-START=50
 NGINX_BIN=/usr/sbin/nginx
 NGINX_CONF="/etc/nginx/nginx.conf"
 start() {
@@ -10,7 +9,6 @@ start() {
 	$NGINX_BIN
 	lan_ip=$(uci get network.lan.ipaddr)
 	iptables -t nat -I PREROUTING -i br-lan -p tcp --dport 80 -j DNAT --to ${lan_ip}:8080
-	iptables -t nat -I PREROUTING -i br-lan -p tcp -d ${lan_ip} -j ACCEPT	
 	iptables -t nat -I PREROUTING -i br-lan -p tcp -d  101.95.50.0/24 -j ACCEPT	
 }
 
@@ -18,7 +16,6 @@ stop() {
 	$NGINX_BIN -s stop
 	lan_ip=$(uci get network.lan.ipaddr)	
 	iptables -t nat -D PREROUTING -i br-lan -p tcp --dport 80 -j DNAT --to ${lan_ip}:8080
-	iptables -t nat -D PREROUTING -i br-lan -p tcp -d ${lan_ip} -j ACCEPT	
 	iptables -t nat -D PREROUTING -i br-lan -p tcp -d  101.95.50.0/24 -j ACCEPT	
 }
 
