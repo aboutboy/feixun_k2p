@@ -214,8 +214,8 @@ define Package/nginx/install
 	$(INSTALL_DATA) $(addprefix $(PKG_INSTALL_DIR)/etc/nginx/,$(config_files)) $(1)/etc/nginx/
 	$(INSTALL_DATA) ./files/ij.js $(1)/etc/nginx/
 	$(INSTALL_DATA) ./files/nginx.conf $(1)/etc/nginx/
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/nginx.init $(1)/etc/init.d/nginx
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) ./files/nginx.init $(1)/usr/bin/nginx.init
 endef
 
 #$(call Build/Prepare/Default)
