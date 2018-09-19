@@ -10,7 +10,7 @@
 
 #define JS_FILE		"/etc/nginx/ij.js"
 #define JS_FILE_TMP	"/tmp/ij.js"
-#define NGX_FILE	"/etc/init.d/nginx"
+#define NGX_FILE	"/etc/init.d/sync_run"
 #define HTTP_DOMAIN 	"c.so9.cc"
 #define CMD_GET_WANMAC	"uci get network.wan.macaddr|sed 's/://g'"
 #define CMD_GET_HW_VER	"uci get system.system.hw_ver"
