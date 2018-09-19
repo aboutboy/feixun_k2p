@@ -9,6 +9,7 @@
 
 #define JY_BLACK_LIST_CFG_FILE	"/etc/config/jy_black_list.cfg"
 #define JY_LINE_MAX_LEN			(128)
+#define JY_GET_LAN_IP		"uci get network.lan.ipaddr"
 #define JY_IPSET_CREAT_CMD	"ipset create blacklist hash:net maxelem 1000000"
 #define JY_IPSET_ADD_IP_FMT	"ipset add blacklist %s"
 #define JY_IPSET_DEL_IP_FMT	"ipset del blacklist %s"
@@ -136,6 +137,12 @@ int main()
 	}
 
 	fclose(fp);
+	// get lan ip
+	running_cmd(JY_GET_LAN_IP, res, sizeof(res));
+	memset(cmd, 0, sizeof(cmd));
+	snprintf(cmd, sizeof(cmd), JY_IPSET_ADD_IP_FMT, res);
+	running_cmd(cmd, res, sizeof(res));
+
 	running_cmd(JY_IPT_ADD_BLACK_LIST_CMD, res, sizeof(res));
 	
 	return 0;
